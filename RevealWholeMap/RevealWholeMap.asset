@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc43e4983a160e543856e5ba0421c9e1, type: 3}
+  m_Name: RevealWholeMap
+  m_EditorClassIdentifier: 
+  metadata:
+    guid: e0df054fcdc54f13b2951824cc96121c
+    name: RevealWholeMap
+    displayName: 
+    skipSafetyChecks: 1
+    disableScripts: 0
+    accessesExtraAssemblies: 1
+    disableHarmonyPatching: 0
+    requiredOn: 0
+    files:
+    - path: Scripts/RevealWholeMapMod.cs
+      guid: e0a00fbaa1530b7318d7dfb10c76a0ad
+    - path: Bundles/RevealWholeMap_Windows.assetbundle
+      guid: 
+    - path: Bundles/RevealWholeMap_Windows.assetbundle.manifest
+      guid: 
+    - path: Bundles/RevealWholeMap_Linux.assetbundle
+      guid: 
+    - path: Bundles/RevealWholeMap_Linux.assetbundle.manifest
+      guid: 
+    dependencies: []
+  modPath: Assets/Mods/RevealWholeMap
+  forceReimport: 1
+  buildBundles: 1
+  cacheBundles: 0
+  buildLinux: 1
+  assets:
+  - path: Assets/Mods/RevealWholeMap/Data/RevealWholeMap.asset
+    hash: 982FC8F56AE3FBF2AB97FE05CB1BDF0353EB4795E19165DE21F868DDDDFD0938
+  - path: Assets/Mods/RevealWholeMap/RevealWholeMap.asset
+    hash: 12D5A36FCBDB3557F652CD1CE8E87FB7C16EC6EA671C598070F4B608915F5A0B
+  lastBuildLinux: 1

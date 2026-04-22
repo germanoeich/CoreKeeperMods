@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc43e4983a160e543856e5ba0421c9e1, type: 3}
+  m_Name: LooseArtOverrides
+  m_EditorClassIdentifier: 
+  metadata:
+    guid: b4a55fe0a126865f68773be0a55f55cb
+    name: LooseArtOverrides
+    displayName: 
+    skipSafetyChecks: 1
+    disableScripts: 0
+    accessesExtraAssemblies: 1
+    disableHarmonyPatching: 0
+    requiredOn: 0
+    files:
+    - path: Scripts/LooseArtOverridesMod.cs
+      guid: 73f81a0f589442d9895b893e50414060
+    - path: Bundles/LooseArtOverrides_Windows.assetbundle
+      guid: 
+    - path: Bundles/LooseArtOverrides_Windows.assetbundle.manifest
+      guid: 
+    - path: Bundles/LooseArtOverrides_Linux.assetbundle
+      guid: 
+    - path: Bundles/LooseArtOverrides_Linux.assetbundle.manifest
+      guid: 
+    dependencies: []
+  modPath: Assets/Mods/LooseArtOverrides
+  forceReimport: 1
+  buildBundles: 1
+  cacheBundles: 0
+  buildLinux: 1
+  assets:
+  - path: Assets/Mods/LooseArtOverrides/Data/LooseArtOverrides.asset
+    hash: 19FD8211125FDBEB903BA9969F76FE10DAB0EDE1BC8611A1753E64F2FAF5482A
+  - path: Assets/Mods/LooseArtOverrides/LooseArtOverrides.asset
+    hash: 259F095AE70B9820D3CE2AF296C842D75269A72590CC2B9F40DF998F05722576
+  lastBuildLinux: 1

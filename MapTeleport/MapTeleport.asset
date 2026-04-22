@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc43e4983a160e543856e5ba0421c9e1, type: 3}
+  m_Name: MapTeleport
+  m_EditorClassIdentifier: 
+  metadata:
+    guid: 90b46f8553fd4ae6ab916eac6bcf2294
+    name: MapTeleport
+    displayName: 
+    skipSafetyChecks: 0
+    disableScripts: 0
+    accessesExtraAssemblies: 1
+    disableHarmonyPatching: 0
+    requiredOn: 0
+    files:
+    - path: Scripts/MapTeleportMod.cs
+      guid: 42165f2b1b264fb28b5a31dd5f2e40d4
+    - path: Bundles/MapTeleport_Windows.assetbundle
+      guid: 
+    - path: Bundles/MapTeleport_Windows.assetbundle.manifest
+      guid: 
+    - path: Bundles/MapTeleport_Linux.assetbundle
+      guid: 
+    - path: Bundles/MapTeleport_Linux.assetbundle.manifest
+      guid: 
+    dependencies: []
+  modPath: Assets/Mods/MapTeleport
+  forceReimport: 1
+  buildBundles: 0
+  cacheBundles: 0
+  buildLinux: 1
+  assets:
+  - path: Assets/Mods/MapTeleport/Data/MapTeleport.asset
+    hash: FE2242E127B9C07B00CFCBD5BC0835ADF4B8960FD864B40999CD28701BCCBCFD
+  - path: Assets/Mods/MapTeleport/MapTeleport.asset
+    hash: 7A6C3488A41984533E7ADDB236E6BE1C60104FBBBB86023F7A3B8B9A9C5C8DF7
+  - path: Assets/Mods/MapTeleport/MapTeleport_modio.asset
+    hash: C1031E1A52FB2047B553108DC5BB249ED7D56599CE8F2A3C69B1F175386107C7
+  - path: Assets/Mods/MapTeleport/Teleport Anywhere_Steam 1.asset
+    hash: 6DF1CA99F59814D36616D02FE6502176341954FF074B2CECB1D6CF7AE7C51660
+  lastBuildLinux: 1

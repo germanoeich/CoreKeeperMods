@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -217761678, guid: 292700ef68995bdb2163e35989fc7eb0, type: 3}
+  m_Name: StorageTerminal_Base
+  m_EditorClassIdentifier: 
+  m_overload:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_address:
+    m_low: -3370080914413558073
+    m_high: 7954132290161597867
+  m_dynamicCollections:
+    m_list: []
+  m_defaultPrimaryGradientMap: {fileID: 0}
+  m_defaultSecondaryGradientMap: {fileID: 0}
+  m_defaultTertiaryGradientMap: {fileID: 0}
+  m_defaultPrimaryGradientMapRef:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_defaultSecondaryGradientMapRef:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_defaultTertiaryGradientMapRef:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_editorHideEmissive: 0
+  m_staticSpriteData:
+    texture: {fileID: 2800000, guid: c7d50290e79e789d28c6876d20ea9c94, type: 3}
+    emissiveTexture: {fileID: 2800000, guid: de0801c5baa8d787292e4ca53f6b7ce7, type: 3}
+    normalTexture: {fileID: 0}
+    pivot: {x: 0.5, y: 0.5}
+    positionalData: []
+    inheritPivot: 0
+  m_staticVariants:
+  - texture: {fileID: 2800000, guid: 4782285b89a2105928a27a2c5504380a, type: 3}
+    emissiveTexture: {fileID: 0}
+    normalTexture: {fileID: 0}
+    pivot: {x: 0, y: 0}
+    positionalData: []
+    inheritPivot: 0
+  - texture: {fileID: 2800000, guid: 9bd16e40752af289aa87723633d1c19d, type: 3}
+    emissiveTexture: {fileID: 0}
+    normalTexture: {fileID: 0}
+    pivot: {x: 0, y: 0}
+    positionalData: []
+    inheritPivot: 0
+  m_animations: []
+  m_events: []
+  m_positionalData: []
+  references:
+    version: 2
+    RefIds: []

@@ -1,0 +1,426 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc43e4983a160e543856e5ba0421c9e1, type: 3}
+  m_Name: StoragePlus
+  m_EditorClassIdentifier: 
+  metadata:
+    guid: b3d04afa1e794edb831d0cc09ca30b90
+    name: StoragePlus
+    displayName: 
+    skipSafetyChecks: 0
+    disableScripts: 0
+    accessesExtraAssemblies: 1
+    disableHarmonyPatching: 0
+    requiredOn: 3
+    files:
+    - path: Scripts/Script/UI/StorageTerminalUIUtility.cs
+      guid: 310d82b6a0a125b492c6cd6e11f5ac86
+    - path: Scripts/Script/UI/StorageTerminalUIBootstrap.cs
+      guid: 5ae5d59d85bf6caa8ad27d2474d82f8e
+    - path: Scripts/Script/UI/StorageTerminalUI.Sorting.cs
+      guid: a1315ca4ee2f443198b8c30aa4752099
+    - path: Scripts/Script/UI/StorageTerminalUI.NetworkFullness.cs
+      guid: 5e4d7c64f8414bc4ac32f538f27bf782
+    - path: Scripts/Script/UI/StorageTerminalUI.Hints.cs
+      guid: 4d4f7c6a3b5241f780fef96d1d6d3a20
+    - path: Scripts/Script/UI/StorageTerminalUI.Filters.cs
+      guid: 0243ee5e682729159bf6e2acab9e6689
+    - path: Scripts/Script/UI/StorageTerminalUI.Entries.cs
+      guid: b14115aef6bfdf9c5030dfcdfff42fcd
+    - path: Scripts/Script/UI/StorageTerminalUI.cs
+      guid: ebf9d7200865c51929aada58297b3373
+    - path: Scripts/Script/UI/StorageTerminalSortButton.cs
+      guid: 7b9549694dd34f18ae00f2390ac77948
+    - path: Scripts/Script/UI/StorageTerminalShowFiltersButton.cs
+      guid: 9b6f8abf82fe4ad7849f825199cbb4dc
+    - path: Scripts/Script/UI/StorageTerminalSearchField.Input.cs
+      guid: 61b9c0a69f161e186c5587346acb50dd
+    - path: Scripts/Script/UI/StorageTerminalSearchField.cs
+      guid: 3fbf8bb1fcb84d4c9b25b0b1c2fba26c
+    - path: Scripts/Script/UI/StorageTerminalPlayerInventoryTransferPatch.cs
+      guid: f2821888b0ca332aee48d855544df825
+    - path: Scripts/Script/UI/StorageTerminalNetworkFullnessHover.cs
+      guid: 4b72478dbaf84bd4934dd73537f68ed0
+    - path: Scripts/Script/UI/StorageTerminalItemSlot.cs
+      guid: f099128ba0b2ae2c2bb9c30f4918026b
+    - path: Scripts/Script/UI/StorageTerminalItemEntry.cs
+      guid: e342ae4ac1bc35b04bf4d560a8f86fdc
+    - path: Scripts/Script/UI/StorageTerminalHotSyncSnapshot.cs
+      guid: d84627753e6e63e7a963a0a60a2e2cd0
+    - path: Scripts/Script/UI/StorageTerminalHotSyncRuntime.Reflection.cs
+      guid: e883243973c0920f62f2ed62f28b3e20
+    - path: Scripts/Script/UI/StorageTerminalHotSyncRuntime.Handlers.cs
+      guid: 708d89f4d0c9247ae5dc546305e36ea2
+    - path: Scripts/Script/UI/StorageTerminalHotSyncRuntime.cs
+      guid: 7e4b24dd56dc60f1887b2918d0e1f5f9
+    - path: Scripts/Script/UI/StorageTerminalHotSyncRuntime.Capture.cs
+      guid: 9264746848570ef67e9056e724b1654c
+    - path: Scripts/Script/UI/StorageTerminalHintTextButton.cs
+      guid: 7d74fd638caa4f7288d5db3404fd4d4a
+    - path: Scripts/Script/UI/StorageTerminalGrid.cs
+      guid: 87524f2351cb157f9a405ca1ff6ad6b2
+    - path: Scripts/Script/UI/StorageTerminalFilterIconAuthoring.cs
+      guid: 4c89f6c97f5e4a0abbf7684f3dd6ae12
+    - path: Scripts/Script/UI/StorageTerminalFilterGrid.cs
+      guid: 1d9cb5c9e5c94867a95039d1df669d0c
+    - path: Scripts/Script/UI/StorageTerminalFilterButton.cs
+      guid: 3268c17d98adc125db8d2ed834d90f6d
+    - path: Scripts/Script/UI/IStorageTerminalHotSyncAware.cs
+      guid: ac8389e1ec49026ceb387122d1283c20
+    - path: Scripts/Script/Tileset/TilesetLayerIsolationUtility.cs
+      guid: 518457a6c76d4c7a97baaaea2f304a00
+    - path: Scripts/Script/Tileset/TilesetAdaptiveTextureUtility.cs
+      guid: d34d4df1f365474096816a5b2322de02
+    - path: Scripts/Script/System/StorageNetwork/StorageNetworkWorldCacheRegistry.cs
+      guid: 7e3b71c450ababd5cf33be77c290c3ae
+    - path: Scripts/Script/System/StorageNetwork/StorageNetworkWorldCache.Networks.cs
+      guid: 9593b0ec3448fa8f8d58de252ec15fa2
+    - path: Scripts/Script/System/StorageNetwork/StorageNetworkWorldCache.Hashing.cs
+      guid: 4040f3e8c6c6ef07fbfa0d8e1c8b9f72
+    - path: Scripts/Script/System/StorageNetwork/StorageNetworkWorldCache.Debug.cs
+      guid: 65064574f2f16263ab0be965d2a872a6
+    - path: Scripts/Script/System/StorageNetwork/StorageNetworkWorldCache.cs
+      guid: 4102aa1a785642b48cb44896810eff91
+    - path: Scripts/Script/System/StorageNetwork/StorageNetworkTypes.cs
+      guid: a499b071ebb0375567a911de2bece4e5
+    - path: Scripts/Script/System/StorageNetwork/StorageIntakeTransferPlanner.cs
+      guid: fddfc3fad67af7b0148557e84a87701b
+    - path: Scripts/Script/System/StorageNetwork/StorageIntakeRouteCache.cs
+      guid: 5c71bfd2282406788fa8bb9715479d49
+    - path: Scripts/Script/System/StorageNetwork/StorageIntakeRouteBuilder.cs
+      guid: a65c1f20a3b022ceb6574bc05c4499c9
+    - path: Scripts/Script/System/StorageNetwork/StorageIntakeNetworkSystem.cs
+      guid: adb9b333d030133cfa0c0e30ab12dc18
+    - path: Scripts/Script/System/StorageNetwork/StorageConnectorEnableCircleSyncSystem.cs
+      guid: 34d90c40bd22b948dbf071c133c677c9
+    - path: Scripts/Script/System/StorageNetwork/ItemDropperRequestSystem.cs
+      guid: 25f2bd22d5bc4fce9378281d12745f55
+    - path: Scripts/Script/System/Rendering/StorageElectricityTextureSystem.cs
+      guid: 7ed107f17c50f49659f83c8ba3a5b309
+    - path: Scripts/Script/System/Network/StorageTerminalWithdrawTransferPlanner.cs
+      guid: efdf4ceab7ba33b48c7e9b803b617c89
+    - path: Scripts/Script/System/Network/StorageTerminalWithdrawRpcSystem.cs
+      guid: 51adaef1bcbb1a3a7b93441fda24c36d
+    - path: Scripts/Script/System/Network/StorageTerminalWithdrawRpc.cs
+      guid: 1f53fba86b52add69a968f198ca798c6
+    - path: Scripts/Script/System/Network/StorageTerminalWithdrawRequestProcessor.cs
+      guid: 3e1d0badf985ecd4b02f17d8a3d03863
+    - path: Scripts/Script/System/Network/StorageTerminalQuickStackRelaySystem.cs
+      guid: f7301ea54b6ef927498d6e8e73c82a2b
+    - path: Scripts/Script/System/Network/StorageTerminalNetworkDepositPlanner.cs
+      guid: 7445b2d35d6eeb49bdddc0509a0d96bc
+    - path: Scripts/Script/System/Network/StorageTerminalDepositRpcSystem.cs
+      guid: 4ce520e88e24d2253a083eab9b116f91
+    - path: Scripts/Script/System/Network/StorageTerminalDepositRpc.cs
+      guid: 95c47b433d0aad536d01891c73d787f9
+    - path: Scripts/Script/System/CraftingRelay/StorageCraftingRelayUpgradeMaterialInfosPatch.cs
+      guid: 7437ef21f09d7ae9b6daf45fc785ae17
+    - path: Scripts/Script/System/CraftingRelay/StorageCraftingRelaySummarySystem.cs
+      guid: 2c8810394785414381123fa7515f2f9b
+    - path: Scripts/Script/System/CraftingRelay/StorageCraftingRelaySummaryBuilder.cs
+      guid: 256ade9aff9160f3386b643221474314
+    - path: Scripts/Script/System/CraftingRelay/StorageCraftingRelayRecipeMaterialInfosPatch.cs
+      guid: 6f4c53a432a6d53a1c1f01c5d6901687
+    - path: Scripts/Script/System/CraftingRelay/StorageCraftingRelayHasMaterialsPatch.cs
+      guid: 529df7666a00d18bc8f63246180313c3
+    - path: Scripts/Script/System/CraftingRelay/StorageCraftingRelayDomainSystem.cs
+      guid: 5c4dc4a8a5ea4ca1841a8f8032f2ad4b
+    - path: Scripts/Script/System/CraftingRelay/StorageCraftingRelayClientSummaryUtility.cs
+      guid: 62939ae6a86d4a77af596eba8f606ad8
+    - path: Scripts/Script/StoragePlusMod.cs
+      guid: e27d38dd338f4094a0028398c7b437e5
+    - path: Scripts/Script/Objects/StorageTerminalChest.cs
+      guid: 0bee531f57060688ba22094db6266eb2
+    - path: Scripts/Script/Objects/StoragePipeEntityMono.cs
+      guid: 4bf4faacf544e0b0da79710e1cbd7514
+    - path: Scripts/Script/Objects/StorageOutputConnectorEntityMono.cs
+      guid: ba106ffa8402458091eff8e534658522
+    - path: Scripts/Script/Objects/StorageInputConnectorEntityMono.cs
+      guid: 8a45dd51ce7348c6aa95d02d0950b716
+    - path: Scripts/Script/Objects/StorageConnectorEntityMono.cs
+      guid: 2ec20402cc216f173b8b1366f1949abe
+    - path: Scripts/Script/Objects/ItemDropperEntityMono.cs
+      guid: e45dc9c71ea44e079b5fed09fb170c8c
+    - path: Scripts/Script/Debug/StoragePlusDebugCommands.cs
+      guid: ee41792b7ec446350a1755bc17d3e6d4
+    - path: Scripts/Script/Components/Network/StoragePipeTag.cs
+      guid: c5300bcf18957a9fd84e2dc7128b2a9a
+    - path: Scripts/Script/Components/Network/StorageConnectorTag.cs
+      guid: 7c1ed29ec17baa05aa205eda006f51a7
+    - path: Scripts/Script/Components/Network/OutputConnectorTag.cs
+      guid: 4a74f8924d2f4f32a9d7f30bf84dc117
+    - path: Scripts/Script/Components/Network/ItemDropperTimingCD.cs
+      guid: 7f3bf77f36fd4cefa173f852253077e4
+    - path: Scripts/Script/Components/Network/InputConnectorTag.cs
+      guid: 9fb1b845690c4d2db3f2d5eeb1dbf90a
+    - path: Scripts/Script/Components/CraftingRelay/StorageCraftingRelayTag.cs
+      guid: 1dbe8e7a8b4b4c5b8a4a9f2a7c3e1d55
+    - path: Scripts/Script/Components/CraftingRelay/StorageCraftingNetworkSummaryState.cs
+      guid: 876f93e62f2747b4bd0c30dd241dbec1
+    - path: Scripts/Script/Authoring/Network/StoragePipeAuthoring.cs
+      guid: 2a6c6d843b704012abf36294a4d39e74
+    - path: Scripts/Script/Authoring/Network/StorageNetworkLoadRetentionUtility.cs
+      guid: 936a6e94eb143847cab6fabf0eb959b7
+    - path: Scripts/Script/Authoring/Network/StorageConnectorAuthoring.cs
+      guid: e27d6e877c4f4baf94866f0f7426a8ab
+    - path: Scripts/Script/Authoring/Network/ModPlaceableObjectConversionPatch.cs
+      guid: 88b3eb9f2d694d32b565ba60d7dc34e5
+    - path: Scripts/Script/Authoring/Network/ModPlaceableObjectAuthoring.cs
+      guid: 849e1bb12bca48f899fb3e9cae6d7ec8
+    - path: Scripts/Script/Authoring/Network/ItemDropperAuthoring.cs
+      guid: 9e8b6daefddb4ed993243b0be7f1985b
+    - path: Scripts/Script/Authoring/Network/InputConnectorAuthoring.cs
+      guid: b3b58e08e6c24c789ce6246452d8f87f
+    - path: Scripts/Script/Authoring/CraftingRelay/StorageCraftingRelayAuthoring.cs
+      guid: 8a2f6f37f8b6413b91fbf0a88eb95a11
+    - path: Scripts/Generated/ItemDropperRequestSystem__System_6721531270.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageConnectorEnableCircleSyncSystem__System_12652535590.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageCraftingRelayDomainSystem__System_8921224230.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageCraftingRelaySummarySystem__System_19804577910.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageElectricityTextureSystem__System_12791612730.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageIntakeNetworkSystem__System_6816669240.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageTerminalDepositRpcSystem__System_14031160740.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageTerminalQuickStackRelaySystem__System_3346009170.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageTerminalWithdrawRpcSystem__System_16835898340.g.cs
+      guid: 
+    - path: Scripts/Generated/GhostComponentSerializerCollection.cs
+      guid: 
+    - path: Scripts/Generated/StorageCraftingNetworkSummaryEntrySerializer.cs
+      guid: 
+    - path: Scripts/Generated/StorageCraftingNetworkSummaryStateSerializer.cs
+      guid: 
+    - path: Scripts/Generated/StorageTerminalDepositRpcCommandSerializer.cs
+      guid: 
+    - path: Scripts/Generated/StorageTerminalWithdrawRpcCommandSerializer.cs
+      guid: 
+    - path: Bundles/StoragePlus_Windows.assetbundle
+      guid: 
+    - path: Bundles/StoragePlus_Windows.assetbundle.manifest
+      guid: 
+    - path: Bundles/StoragePlus_Linux.assetbundle
+      guid: 
+    - path: Bundles/StoragePlus_Linux.assetbundle.manifest
+      guid: 
+    dependencies:
+    - modName: CoreLib
+      required: 1
+  modPath: Assets/Mods/StoragePlus
+  forceReimport: 1
+  buildBundles: 1
+  cacheBundles: 0
+  buildLinux: 1
+  assets:
+  - path: Assets/Mods/StoragePlus/Art/art_v2.ase
+    hash: 019CAD9E739EA8DDF1CCE275B87D795675E512AC4BD815C873EBB44D3F58C01E
+  - path: Assets/Mods/StoragePlus/Art/Connectors_icons.png
+    hash: B977A03207877376F3C441071ED6CDC1C8E1B990B01A32DE908CE4155684E268
+  - path: Assets/Mods/StoragePlus/Art/InputConnector.png
+    hash: 735E4BD944BB91D50A954BFA3C03BB5CD364451CB387757A8584E6504A367F24
+  - path: Assets/Mods/StoragePlus/Art/InputConnector_emissive.png
+    hash: 4B38F7BFE9DCEDF3B03D4E4A7668A9C84769F8D4D83ABD54A206375551941202
+  - path: Assets/Mods/StoragePlus/Art/InputConnector_icon.png
+    hash: 54B6D691C2BEB4DBBA1594F0508DDF4CF0AE766C39D0AAD6C7315AECB4631ECA
+  - path: Assets/Mods/StoragePlus/Art/InputConnector_icon_sm.png
+    hash: 00F5525EF580F92E9EA69F632D2005873D6E7AB22F8248AD787DBD339581F738
+  - path: Assets/Mods/StoragePlus/Art/item_dropper_icons.png
+    hash: 8C399F622DA1D34B75AAA2F743E8FD461CD3B2404626ACC5A9ED3A677884226C
+  - path: Assets/Mods/StoragePlus/Art/ItemDropper.png
+    hash: FBC3023558476C7F9ECF665E6FE6D6752E5CF6A6E450EF696342E7734D6DAFED
+  - path: Assets/Mods/StoragePlus/Art/ItemDropper_emissive.png
+    hash: DF6B0022593B251FA8730FB95E71330D30A37BA0A0BC0E831EFE4E5D29A8D457
+  - path: Assets/Mods/StoragePlus/Art/ItemDropper_icon.png
+    hash: 5573D4E7881FDBC9BCC94D68A93D261A7916A96FA312C6ECBDFA49E55924E5D2
+  - path: Assets/Mods/StoragePlus/Art/ItemDropper_icon_sm.png
+    hash: B4FF31980E77D1A95B32D3A37C6B5B5A87E7ACFE48147393B2E803C0534E4D4A
+  - path: Assets/Mods/StoragePlus/Art/network_tileset_emissive_v2.png
+    hash: A3648B223A28A7E009A905909091173AF37F881050B32051D9CBE7288913B6DB
+  - path: Assets/Mods/StoragePlus/Art/network_tileset_v2.png
+    hash: 753656987570E2A230E28A190DF6B214BDAE5DDE6BD82F4904EF822BE4FEF09F
+  - path: Assets/Mods/StoragePlus/Art/Old/network_tileset.png
+    hash: A618A3AD1D53E42AB9D87CA10ACD07917F130503034BEE7FB09FD29C061E64A6
+  - path: Assets/Mods/StoragePlus/Art/Old/network_tileset_emissive.png
+    hash: 30FCE244B92EC8BF2BF07FA846A1844C3816AC357B6E9CBF47BA32C6D3557F34
+  - path: Assets/Mods/StoragePlus/Art/Old/StoragePipe_icon.png
+    hash: 13B7B23A0D07A9CDBC27D5C396FF30E28D2AA81B5DFE5C327C808E4294912011
+  - path: Assets/Mods/StoragePlus/Art/Old/StoragePipe_icon_sm.png
+    hash: 6983D18CFB2D9366536E6AFAF2DDF2EE62252421E8D9D97BC6A4BEE57B4335E6
+  - path: Assets/Mods/StoragePlus/Art/Old/StorageTerminal_Base.png
+    hash: 3A35C1494551198EF36A33EEE346801DFD8B6C602C2F808196719631ED91E343
+  - path: Assets/Mods/StoragePlus/Art/Old/StorageTerminal_Base_emissive.png
+    hash: BBCF575B4A8A4000BFFCDEA58E4073A75A7EDACDC731722BFA62BF44B79BDD69
+  - path: Assets/Mods/StoragePlus/Art/Old/StorageTerminal_Beam.png
+    hash: 7B13171C6C07F4309A61E8FD75EECE2217B79288B4DC8937FFFB77DFF51BB8B2
+  - path: Assets/Mods/StoragePlus/Art/Old/StorageTerminal_Beam_emissive.png
+    hash: D92C5DB9DAFE27C94E0957CA56B83F04156B36539B98D3F238AFC4DC092B4C6F
+  - path: Assets/Mods/StoragePlus/Art/Old/StorageTerminal_icon.png
+    hash: B1313DF5D54AEA9A567EAEF8A678CE31D9D446ABE65D5659629AAC73E0E6A9E4
+  - path: Assets/Mods/StoragePlus/Art/Old/StorageTerminal_icon_sm.png
+    hash: EBFCB2D68D9CA6BF4B3B79C4431EAE3ABBD877957C24E862DD1C36EF5518DD4A
+  - path: Assets/Mods/StoragePlus/Art/OutputConnector.png
+    hash: BF49EF1AEDC6C8EAA30857F82D793B8BDCBA66BC5D91CADE522F0A9998391F1C
+  - path: Assets/Mods/StoragePlus/Art/OutputConnector_emissive.png
+    hash: EE172C6F249154FC1EAF9DB40AD5E94A5E6F897716400A3E7C5024E7BB077C6A
+  - path: Assets/Mods/StoragePlus/Art/OutputConnector_icon.png
+    hash: 6468CBF180A39851B7120D198A3593FE930498EFE27E45EECDEC4C8ABB79AD2A
+  - path: Assets/Mods/StoragePlus/Art/OutputConnector_icon_sm.png
+    hash: 108B2CF2A4FA8C487516E5B71B07E33CEF161C365007D08B10D5AB7AD0C56BD9
+  - path: Assets/Mods/StoragePlus/Art/StoragePipe_icons.png
+    hash: AED1183B8AE0AB839DE58A0425D33AF67EFD4C27E1E11548450922F9A250B16E
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal.png
+    hash: EBFAE80C66C299361D0E4FDB0FC0B933DFE3423CC8DC6AA5E0F6AEEEE1DDF922
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_Base.png
+    hash: 2224C7A33D0DECCE6D3536FE2251C1D7FDA145BCE7A3BDDE9BF61B47635E0101
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_Base_emissive.png
+    hash: A076040E9C3FAA4772783920A9D1E12CBE6D5E511FE491C09E40044868D1093D
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_Beam.ase
+    hash: 2B0E794DBBD5A3C57C4E8580F15256F3660452122FCCAE01F14EE20A74B9F34C
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_Beam.png
+    hash: 7B13171C6C07F4309A61E8FD75EECE2217B79288B4DC8937FFFB77DFF51BB8B2
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_Beam_emissive.png
+    hash: D92C5DB9DAFE27C94E0957CA56B83F04156B36539B98D3F238AFC4DC092B4C6F
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_chest.png
+    hash: 98982D00BDF271B070D753A72AB7201C028E1EDC22DC928F28AE3839C86D317D
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_chest_emissive.png
+    hash: 491F208B99C8019D29ECB58565081E8122BE5BB8DFEF6312430F235F333C25E7
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_emissive.png
+    hash: 77100B7D63427F0E97903623ACBCC91C2C1D43CF3DCB7A38DF5CB22E12FD18DB
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_icon.png
+    hash: EBFAE80C66C299361D0E4FDB0FC0B933DFE3423CC8DC6AA5E0F6AEEEE1DDF922
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_icon_sm.png
+    hash: 15B954DC7C2F435EB8478DE8618107BDC7108842645B5A68E1F936A8D2F2AF59
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_Pedestal.png
+    hash: D3F73D99B95FC4A0442C59E46CB8180502854260C0598112A04F7C175552D6D5
+  - path: Assets/Mods/StoragePlus/Art/StorageTerminal_Pedestal_emissive.png
+    hash: A42CB02DDA808CACB45A90A3F2D4AB49D31C1D7B1BADE3B83F037A4892934EC9
+  - path: Assets/Mods/StoragePlus/Art/terminal-5-animated.aseprite
+    hash: 5E56FC94713224342EE5F32C5299D35F5A4162C82FF33978752CB663A0167036
+  - path: Assets/Mods/StoragePlus/Art/UI/armor_lootsprites.png
+    hash: 5092A47FA5CC75841F3E8885E339B0EA197B5703A3D1A9070167F086D08F65CB
+  - path: Assets/Mods/StoragePlus/Art/UI/food_lootsprites.png
+    hash: AA324C12A0D7188E0CE8F4A2B3FB6C6B15A8320E46F01BCB076C2B3DCD059F78
+  - path: Assets/Mods/StoragePlus/Art/UI/lootsprites.png
+    hash: 91AD58336F8248EA956854D77D74A3067B54E1743F984CCBBEBF1D1D17915CBC
+  - path: Assets/Mods/StoragePlus/Art/UI/storageplus_ui.png
+    hash: F3EA07B931CAFE1DA6F927B29A5522620DEC9F9EE1184477DAADF60AE5953EB9
+  - path: Assets/Mods/StoragePlus/Art/UI/ui_icon.png
+    hash: 02EDB54DF1B186DC2E773EB081893BA8A7D426A130C173B833AA53AB4F7B68A9
+  - path: Assets/Mods/StoragePlus/Art/UI/ui_panel.png
+    hash: 234B2E84327CEE17182038E35C1E666622CB2BE4047C2D2CD0847F70528EA972
+  - path: Assets/Mods/StoragePlus/Art/UI/ui_rarity_border.png
+    hash: 569E7F4448EDBAF6AB3C596C397F2E7BC1F4B7386DA0E26B3685E402E92B69E3
+  - path: Assets/Mods/StoragePlus/Art/UI/ui_scrollbar.png
+    hash: 54485BF960C22E7CBB92B14A3695F4204C2A29A343A9BC6D51CFD0D20A6ED946
+  - path: Assets/Mods/StoragePlus/Art/UI/white_pixel.png
+    hash: 8D6A5297038C59E6E1243A7F7614A6BEE5EF2D3525775761DACBFDE3F39BD4DB
+  - path: Assets/Mods/StoragePlus/Art/UI/x_icon.png
+    hash: CBD1B9AC4E99148D631021A4FFA46D7F1A70E0A1A02132AD5D77A70C39E72642
+  - path: Assets/Mods/StoragePlus/Art/Wide_banner.png
+    hash: 875112E9217141EA4508EB0DCDDF5845F0ECEBE7DC11D5DD7D8165D3E55FB4A9
+  - path: Assets/Mods/StoragePlus/Data/DraftTilesetLayerGen.asset
+    hash: 502DB2ECF112761298487EC7629A53063A34FC5483F64C406CCF99CF6FB4E3F2
+  - path: Assets/Mods/StoragePlus/Data/ModTileset.asset
+    hash: 39637E1CC7793060B4F1BCFD2A1E457FA1AA7E44BD3BD23469961475B2719A6C
+  - path: Assets/Mods/StoragePlus/Data/MyTileset.asset
+    hash: 828DBFF47ADBB740E1F5447A745CE79B0D5B1F2552C46942EAAEC0FBD946CDFB
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/InputConnector.asset
+    hash: 33E6A06FB3A0CB2E4FAB870BC7E424672F99F8AF01B28A926F11C73655990B4C
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/ItemDropper.asset
+    hash: 3ED9280D710667D3CA8F70C3BCC476510D65628C810907C4B1432AE4067D909A
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/OutputConnector.asset
+    hash: 6103D1AEA715A02768FF0B65438F3B3FE16BD599AB1769D76347B7519EF92E2E
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/StorageTerminal.asset
+    hash: FBFE31A900537622AD3A900BEADC12AED6F4F17A80D37D9FD0465AD2A04C6FF8
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/StorageTerminal2.asset
+    hash: 1418D62E49AF2AC7BA290F029A0049341BC080ABCB22F3F3231C8BAA9FDE394F
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/StorageTerminal_Base.asset
+    hash: 5D02C0C5B43E31854F2CE55E3FDBA1EAB93B066B4B009CFCC60E0B5CEE81CD2C
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/StorageTerminal_Beam.asset
+    hash: 128D80EA2629418F80DE5D9323A357E9C60D5435DA03675625410F101670089C
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/StorageTerminal_chest.asset
+    hash: 9CD964BA88BAA87CE2841CCAA719E52E85317F3391DB4005C52D39EBEF02FEDF
+  - path: Assets/Mods/StoragePlus/Data/SpriteAsset/StorageTerminal_Pedestal.asset
+    hash: E4F2FB708B5994F27D1690218FB2D8735B7B41D663EC16AAF4E709B7EF485365
+  - path: Assets/Mods/StoragePlus/Data/StoragePlus.asset
+    hash: D4BE8AE706BB554CA536712839CC7F336AF25A59081FEC680B91A1FD5210E90C
+  - path: Assets/Mods/StoragePlus/Data/TextDataBlock/Items/StoragePlus_InputConnector.asset
+    hash: 4950B2BFB464D0B41DB2C387ACCCAF16647ED96DF9BB261AD2F0644B63E69AC6
+  - path: Assets/Mods/StoragePlus/Data/TextDataBlock/Items/StoragePlus_ItemDropper.asset
+    hash: 46CA3957AB0140C0303366420922A75F292D6357B2DE406FE624AA39908FD420
+  - path: Assets/Mods/StoragePlus/Data/TextDataBlock/Items/StoragePlus_OutputConnector.asset
+    hash: 4ED3D0C9EE9C2EA63EC5C744FCCBD84F1F434AA6BDC53806FB257808639B00C5
+  - path: Assets/Mods/StoragePlus/Data/TextDataBlock/Items/StoragePlus_StoragePipe.asset
+    hash: 65D75EFF0430DF13FF57F53647D8F2DF6D1662763B3C0830348B39F97DDE5677
+  - path: Assets/Mods/StoragePlus/Data/TextDataBlock/Items/StoragePlus_StorageTerminal.asset
+    hash: 7D07727F21906F62F653D503F0476F778B296B8186CAE6631210D201CC18B79B
+  - path: Assets/Mods/StoragePlus/Data/TextDataBlock/Mods/StoragePlus.asset
+    hash: D230E495D0FF2E015715FE662881B0C85F32D63049794837B2DE76CD95184463
+  - path: Assets/Mods/StoragePlus/draft_art/item_pipe.png
+    hash: 1F1974F684184D3A5FA0F7B46C399D267B6D78F727A3D1C644721D1AC3D3D0DA
+  - path: Assets/Mods/StoragePlus/draft_art/item_pipe_emissive.png
+    hash: B833279B5F0C7D5E1275DC126E5457A401B8A41FD10617A3B78A4EB1BB48A7CE
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2.png
+    hash: 207E0E4C46E941FAA5E3820D366CC762B869BD6B6D585B40F401C17787AFD96A
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2_side.png
+    hash: CFB623B27E5E6029CEE0493D4CE4291389E0BA3A411B1EF86496F7002B150FAA
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2_up.png
+    hash: 7856C26D0E816E16DA13DB3637DFFA167CE5293FF1F8FE047C050A5450744266
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2Blink.png
+    hash: A84D35939D99ABB522DAABDE3342F8BEA1824A68D2137F135862C0C229DF9D5C
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2Blink_emissive.png
+    hash: 43BDC5C566AC9097D639C8C7BBDA349AA24B21A5EEB1357090902DC6E4F74C09
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2Blink_side.png
+    hash: 9529B5A7DF3284D9D6D1391E764F83C171837F4053453851186CFB22102FB6CF
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2Blink_side_emissive.png
+    hash: 86A034217568288450E7B55D8F5E973651D5ACC95DAC4B93B42084FBE366B960
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2Blink_up.png
+    hash: 32C90C7A4764F6EC5181BA5C4E90F00D3DA22FD09148087A307F92A3439395A0
+  - path: Assets/Mods/StoragePlus/draft_art/StorageTerminal2Blink_up_emissive.png
+    hash: 6326737D568C8571FD68C34EF1CD81B9C4FAD90976E3748C55ED2881BB6937FA
+  - path: Assets/Mods/StoragePlus/Prefabs/Items/InputConnector.prefab
+    hash: 5CB7E37779F9FBD74379DA5DACBF11E77B694EA11932CC0FC60A91F561C4DAE7
+  - path: Assets/Mods/StoragePlus/Prefabs/Items/ItemDropper.prefab
+    hash: 3F0336BDDEBDAC2AE4AF410D6D61803056A25A146FD99A3F4A17C5E4B8ECF29B
+  - path: Assets/Mods/StoragePlus/Prefabs/Items/OutputConnector.prefab
+    hash: 4632E33E4C2EEDCE2D7B4ACCEED4CA720FA3404AD097E8E55847D20EA92CC860
+  - path: Assets/Mods/StoragePlus/Prefabs/Items/StoragePipe.prefab
+    hash: 68048663F0CB55A807B3156540DE88661E45F01185503C7D2F565BE2E6F980FE
+  - path: Assets/Mods/StoragePlus/Prefabs/Items/StorageTerminal.prefab
+    hash: 6F0CD624F12BD827FEB8EC510C3FA172E6E3CEF949F8362886740D201F719704
+  - path: Assets/Mods/StoragePlus/Prefabs/Tiles/InputConnectorTile.prefab
+    hash: D5976955A3BF68CD2814D63651C1D72878EACA5F9B5A82AAA6A3F812F2CD8868
+  - path: Assets/Mods/StoragePlus/Prefabs/Tiles/ItemDropperTile.prefab
+    hash: 7E67054632134D96AD29C2CD83496EDC0FE05DF6C0AA5A23B82BF69A72FC4BCD
+  - path: Assets/Mods/StoragePlus/Prefabs/Tiles/OutputConnectorTile.prefab
+    hash: D747539098C5EF32EBF79968DEC323B3350F2BAC8241966CC2612DB1D2184B9D
+  - path: Assets/Mods/StoragePlus/Prefabs/Tiles/StoragePipeEntity.prefab
+    hash: 4C8F5AD96DC97D0160EFD4BD010EFAAAE64B398CCBADBA498EB8BFA28B9C8224
+  - path: Assets/Mods/StoragePlus/Prefabs/Tiles/StorageTerminalEntity.prefab
+    hash: 4CEC9C46D0257148F1148D101EF639C48D1970082C6F8EB50E1921DCC05461C9
+  - path: Assets/Mods/StoragePlus/Prefabs/UI/StorageTerminalUI.prefab
+    hash: 201010E7139891F0065C3AAA61385A08E98CEBD843A84BFAB654C08726007045
+  - path: Assets/Mods/StoragePlus/SpriteAssetManifest.asset
+    hash: B7DF3941A39314CF8D5766046CDE66C58490895599C38950E1F05DD8BB220EAD
+  - path: Assets/Mods/StoragePlus/StoragePlus.asset
+    hash: 7EE55E747FC63E27A2AB899DFEDD0834C3F4A427141D644A4665907E4DA4DFDE
+  - path: Assets/Mods/StoragePlus/StoragePlus_modio.asset
+    hash: 9F9203674CC65C1BFA68233240F45042EB29DF86D0313CA8929D25F51514C4E1
+  - path: Assets/Mods/StoragePlus/StoragePlus_Steam.asset
+    hash: C7D465B8ABA698B087F260A631D1CF7924E76ACB4D74731883FEF0499F2DE68A
+  lastBuildLinux: 1

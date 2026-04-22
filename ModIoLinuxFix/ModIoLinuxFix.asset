@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc43e4983a160e543856e5ba0421c9e1, type: 3}
+  m_Name: ModIoLinuxFix
+  m_EditorClassIdentifier: 
+  metadata:
+    guid: 143f026fb5ac42c9928e9e0bc865e461
+    name: ModIoLinuxFix
+    displayName: 
+    skipSafetyChecks: 1
+    disableScripts: 0
+    accessesExtraAssemblies: 1
+    disableHarmonyPatching: 0
+    requiredOn: 1
+    files:
+    - path: Scripts/ModIoLinuxFixMod.cs
+      guid: 4d8eb7cc208f4f5db767c8102e8a5b46
+    - path: Bundles/ModIoLinuxFix_Windows.assetbundle
+      guid: 
+    - path: Bundles/ModIoLinuxFix_Windows.assetbundle.manifest
+      guid: 
+    - path: Bundles/ModIoLinuxFix_Linux.assetbundle
+      guid: 
+    - path: Bundles/ModIoLinuxFix_Linux.assetbundle.manifest
+      guid: 
+    dependencies: []
+  modPath: Assets/Mods/ModIoLinuxFix
+  forceReimport: 1
+  buildBundles: 1
+  cacheBundles: 0
+  buildLinux: 1
+  assets:
+  - path: Assets/ModIoLinuxFix/Data/ModIoLinuxFix.asset
+    hash: 8540512993A7B341D7213DF2E2CB560AB0C552B650E888ACFA4F68EBAB3DC9DC
+  lastBuildLinux: 1

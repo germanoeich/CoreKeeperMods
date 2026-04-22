@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+---
+!u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: { fileID: 0 }
+  m_PrefabInstance: { fileID: 0 }
+  m_PrefabAsset: { fileID: 0 }
+  m_GameObject: { fileID: 0 }
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script:
+    { fileID: 11500000, guid: bc43e4983a160e543856e5ba0421c9e1, type: 3 }
+  m_Name: DebugMod
+  m_EditorClassIdentifier:
+  metadata:
+    guid: aedbf241363548429d745483c5682bd5
+    name: DebugMod
+    displayName:
+    skipSafetyChecks: 1
+    disableScripts: 0
+    accessesExtraAssemblies: 1
+    disableHarmonyPatching: 0
+    requiredOn: 0
+    files:
+      - path: Scripts/Script/Debug/Types/DebugFpsSnapshot.cs
+        guid: e12b672c4e754bc0ac90f911fed4f477
+      - path: Scripts/Script/Debug/Overlay/DebugFpsStatsWindow.cs
+        guid: 92e3d6be870a4f7e8d7d49d16a600c67
+      - path: Scripts/Script/Debug/Overlay/DebugFpsOverlay.cs
+        guid: 5a96bedf224b4ef9a01b0e0ab6542a86
+      - path: Scripts/Script/Debug/Overlay/DebugFpsGraph.cs
+        guid: 1eda47fdcb184a798440a2e02e7d0c66
+      - path: Scripts/Script/Debug/DebugModReloadPatches.cs
+        guid: d6c660ebd7735d0c495eeba3b6e4c6e2
+      - path: Scripts/Script/Debug/DebugModCommands.cs
+        guid: 133a9370ba5248f7a6021e86962d0e3d
+      - path: Scripts/Script/Debug/DebugCraftingRangeBurstDetour.cs
+        guid: 5010d80530af5c85e8629b37453b4b66
+      - path: Scripts/Script/Bootstrap/DebugMod.cs
+        guid: a4bbcff57a674a239491f65b7593d481
+      - path: Bundles/DebugMod_Linux.assetbundle
+        guid:
+      - path: Bundles/DebugMod_Linux.assetbundle.manifest
+        guid:
+      - path: Bundles/DebugMod_Windows.assetbundle
+        guid:
+      - path: Bundles/DebugMod_Windows.assetbundle.manifest
+        guid:
+    dependencies:
+      - modName: CoreLib
+        required: 1
+  modPath: Assets/Mods/DebugMod
+  forceReimport: 1
+  buildBundles: 1
+  cacheBundles: 1
+  buildLinux: 1
+  assets:
+    - path: Assets/Mods/DebugMod/Data/DebugMod.asset
+      hash: C46EDC777CE971B55FC95533A0A880ABEA4DB487DA7F9D43B1CB50CFFFDA3F3A
+    - path: Assets/Mods/DebugMod/DebugMod.asset
+      hash: 63AF33BB86558D6A463FC838B0448B6A163ECAC9A5AC9BAAB75E64B430C09D4F
+    - path: Assets/Mods/DebugMod/DebugMod_modio.asset
+      hash: 370D18275650962CF39A0ADF72910F325DB9DF42B6DA0302DEA9BC5D9E6AEA12
+  lastBuildLinux: 1

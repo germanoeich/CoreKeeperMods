@@ -1,0 +1,19 @@
+{
+    "name": "LooseArtOverrides",
+    "rootNamespace": "",
+    "references": [
+        "PugMod.SDK"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "PugMod.SDK.Runtime.dll",
+        "PugMod.Integration.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d45b8d7615675a3bb838e51de6800ca2, type: 3}
+  m_Name: DraftTilesetLayerGen
+  m_EditorClassIdentifier: 
+  targetTileset: {fileID: 11400000, guid: cd66effdc1fc65760933d3808d7455f1, type: 2}
+  newTilesetId: MyTileset
+  outputFolder: {fileID: 102900000, guid: 7300e42a948b53dceb11ae709164c298, type: 3}
+  sourceTexture: {fileID: 2800000, guid: 903bca2326c0a3479b8c00b1b1ea97b1, type: 3}
+  sourceEmissiveTexture: {fileID: 2800000, guid: 6826a1c4b7e27e8ee927bb5f48314632,
+    type: 3}
+  tileSize: {x: 16, y: 16}
+  arrangeOnly: 1
+  layerBankMode: 0
+  templateId: tileset_extras_circuitplate
+  fillTile:
+    tilePositions: []
+  full:
+    tilePositions:
+    - {x: 2, y: 0}
+  left:
+    tilePositions:
+    - {x: 2, y: 1}
+  right:
+    tilePositions:
+    - {x: 3, y: 1}
+  top:
+    tilePositions:
+    - {x: 3, y: 2}
+  bottom:
+    tilePositions:
+    - {x: 2, y: 2}
+  topLeftCorner:
+    tilePositions:
+    - {x: 0, y: 1}
+  topRightCorner:
+    tilePositions:
+    - {x: 1, y: 1}
+  bottomLeftCorner:
+    tilePositions:
+    - {x: 0, y: 2}
+  bottomRightCorner:
+    tilePositions:
+    - {x: 1, y: 2}
+  innerCorners:
+    tilePositions:
+    - {x: 2, y: 0}
+  singleTile:
+    tilePositions:
+    - {x: 0, y: 0}
+  verticalBridge:
+    tilePositions:
+    - {x: 1, y: 0}
+  verticalBridgeTop:
+    tilePositions:
+    - {x: 1, y: 0}
+  verticalBridgeBottom:
+    tilePositions:
+    - {x: 1, y: 0}
+  horizontalBridge:
+    tilePositions:
+    - {x: 0, y: 0}
+  horizontalBridgeLeft:
+    tilePositions:
+    - {x: 0, y: 0}
+  horizontalBridgeRight:
+    tilePositions:
+    - {x: 0, y: 0}

@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -217761678, guid: 292700ef68995bdb2163e35989fc7eb0, type: 3}
+  m_Name: StorageTerminal2
+  m_EditorClassIdentifier: 
+  m_overload:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_address:
+    m_low: -1123405091342030197
+    m_high: -5045479406769424325
+  m_dynamicCollections:
+    m_list: []
+  m_defaultPrimaryGradientMap: {fileID: 0}
+  m_defaultSecondaryGradientMap: {fileID: 0}
+  m_defaultTertiaryGradientMap: {fileID: 0}
+  m_defaultPrimaryGradientMapRef:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_defaultSecondaryGradientMapRef:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_defaultTertiaryGradientMapRef:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_editorHideEmissive: 0
+  m_staticSpriteData:
+    texture: {fileID: 2800000, guid: c3b45fcbf2e30bd658897b3448b5c404, type: 3}
+    emissiveTexture: {fileID: 0}
+    normalTexture: {fileID: 0}
+    pivot: {x: 0.5, y: 0.5}
+    positionalData: []
+    inheritPivot: 1
+  m_staticVariants:
+  - texture: {fileID: 2800000, guid: 0208e1cef9968aa5684e8cd9949e82af, type: 3}
+    emissiveTexture: {fileID: 0}
+    normalTexture: {fileID: 0}
+    pivot: {x: 0.5, y: 0.5}
+    positionalData: []
+    inheritPivot: 1
+  - texture: {fileID: 2800000, guid: ca96f22e7e002dbff8122e12bd6ed3c9, type: 3}
+    emissiveTexture: {fileID: 0}
+    normalTexture: {fileID: 0}
+    pivot: {x: 0.5, y: 0.5}
+    positionalData: []
+    inheritPivot: 1
+  m_animations:
+  - m_guid: 21a80a35-17b4-4045-8024-fe27a534d589
+    m_spriteData:
+      texture: {fileID: 2800000, guid: 53e77a0a813854f08962846244f5c75c, type: 3}
+      emissiveTexture: {fileID: 2800000, guid: a1456f65da95b5ab39b81d5465863676, type: 3}
+      normalTexture: {fileID: 0}
+      pivot: {x: 0.5, y: 0.5}
+      positionalData: []
+      inheritPivot: 1
+    srcFrameCount: 8
+    fps: 10
+    loop: 1
+    m_exitAnimationGuid: 
+    m_variants:
+    - texture: {fileID: 2800000, guid: 807c1be5582dfcd728744da132db57d3, type: 3}
+      emissiveTexture: {fileID: 2800000, guid: 426b1d382c10723e6a7876a246b7a365, type: 3}
+      normalTexture: {fileID: 0}
+      pivot: {x: 0.5, y: 0.5}
+      positionalData: []
+      inheritPivot: 1
+    - texture: {fileID: 2800000, guid: 204bc2de8d8047ee38ca226514f9e26c, type: 3}
+      emissiveTexture: {fileID: 2800000, guid: 117845858c4b6a38da94ae59f21ee801, type: 3}
+      normalTexture: {fileID: 0}
+      pivot: {x: 0.5, y: 0.5}
+      positionalData: []
+      inheritPivot: 1
+    m_transitions: []
+    frameData:
+    - holdFrames: 0
+      eventMask: 0
+    - holdFrames: 0
+      eventMask: 0
+    - holdFrames: 0
+      eventMask: 0
+    - holdFrames: 0
+      eventMask: 0
+    - holdFrames: 0
+      eventMask: 0
+    - holdFrames: 0
+      eventMask: 0
+    - holdFrames: 0
+      eventMask: 0
+    - holdFrames: 0
+      eventMask: 0
+  m_events: []
+  m_positionalData: []
+  references:
+    version: 2
+    RefIds: []
