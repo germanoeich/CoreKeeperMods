@@ -56,9 +56,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adb3ef797feb413baf4e7b6494bba03e, type: 3}
-  m_Name: MyTileset
+  m_Name: StorageNetworkTileset
   m_EditorClassIdentifier: 
-  tilesetId: MyTileset
+  tilesetId: StorageNetworkTileset
   layers: {fileID: 11400000, guid: b76f663a6296fb6498647dc84cd0eff7, type: 2}
   overrideMaterials: []
   overrideParticles: []
