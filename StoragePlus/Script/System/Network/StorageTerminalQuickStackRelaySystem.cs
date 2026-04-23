@@ -3,6 +3,7 @@ using Inventory;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.NetCode;
 using Unity.Transforms;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
@@ -15,16 +16,42 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
     private readonly List<NearbyRelayNetwork> _nearbyNetworks = new();
     private readonly HashSet<StorageNetworkSnapshot> _seenNetworks = new();
 
+    private InventoryHandlerShared _inventoryHandlerShared;
+
     protected override void OnCreate()
     {
         NeedDatabase();
         RequireForUpdate<StorageCraftingRelayTag>();
         RequireForUpdate<InventoryChangeBuffer>();
+        RequireForUpdate<NetworkTime>();
+        RequireForUpdate<SkillTalentsTableCD>();
+        RequireForUpdate<UpgradeCostsTableCD>();
+        RequireForUpdate<InventoryAuxDataSystemDataCD>();
+        RequireForUpdate<WorldInfoCD>();
         base.OnCreate();
+    }
+
+    protected override void OnStartRunning()
+    {
+        _inventoryHandlerShared = new InventoryHandlerShared(
+            ref base.CheckedStateRef,
+            SystemAPI.GetSingleton<PugDatabase.DatabaseBankCD>(),
+            SystemAPI.GetSingleton<SkillTalentsTableCD>(),
+            SystemAPI.GetSingleton<UpgradeCostsTableCD>(),
+            SystemAPI.GetSingleton<InventoryAuxDataSystemDataCD>());
+
+        base.OnStartRunning();
     }
 
     protected override void OnUpdate()
     {
+        NetworkTime networkTime = SystemAPI.GetSingleton<NetworkTime>();
+        if (networkTime.IsPartialTick)
+        {
+            base.OnUpdate();
+            return;
+        }
+
         PugDatabase.DatabaseBankCD databaseBank = SystemAPI.GetSingleton<PugDatabase.DatabaseBankCD>();
         StorageNetworkWorldCache cache = StorageNetworkWorldCacheRegistry.GetOrCreate(World);
         cache.EnsureBuilt(databaseBank);
@@ -38,11 +65,15 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
             return;
         }
 
-        BufferLookup<InventoryBuffer> inventoryLookup = GetBufferLookup<InventoryBuffer>(isReadOnly: true);
-        BufferLookup<ContainedObjectsBuffer> containedLookup = GetBufferLookup<ContainedObjectsBuffer>(isReadOnly: true);
-        BufferLookup<InventorySlotRequirementBuffer> inventorySlotRequirementLookup = GetBufferLookup<InventorySlotRequirementBuffer>(isReadOnly: true);
-        BufferLookup<LockedObjectsBuffer> lockedObjectsBufferLookup = GetBufferLookup<LockedObjectsBuffer>(isReadOnly: true);
-        ComponentLookup<LocalTransform> localTransformLookup = GetComponentLookup<LocalTransform>(isReadOnly: true);
+        _inventoryHandlerShared.Update(ref base.CheckedStateRef, CreateCommandBuffer(), networkTime);
+
+        bool worldIsReadOnly = SystemAPI.GetSingleton<WorldInfoCD>().guestMode;
+        ComponentLookup<PlayerGhost> playerGhostLookup = _inventoryHandlerShared.playerGhostLookup;
+        BufferLookup<InventoryBuffer> inventoryLookup = _inventoryHandlerShared.inventoryLookup;
+        BufferLookup<ContainedObjectsBuffer> containedLookup = _inventoryHandlerShared.containedObjectsBufferLookup;
+        BufferLookup<InventorySlotRequirementBuffer> inventorySlotRequirementLookup = _inventoryHandlerShared.inventorySlotRequirementBufferLookup;
+        BufferLookup<LockedObjectsBuffer> lockedObjectsBufferLookup = _inventoryHandlerShared.lockedObjectsBufferLookup;
+        ComponentLookup<LocalTransform> localTransformLookup = _inventoryHandlerShared.localTransformLookup;
         ComponentLookup<ObjectCategoryTagsCD> objectCategoryTagsLookup = GetComponentLookup<ObjectCategoryTagsCD>(isReadOnly: true);
         ComponentLookup<OverrideLegendaryForSlotRequirementsCD> overrideLegendaryLookup = GetComponentLookup<OverrideLegendaryForSlotRequirementsCD>(isReadOnly: true);
         ComponentLookup<DurabilityCD> durabilityLookup = GetComponentLookup<DurabilityCD>(isReadOnly: true);
@@ -52,8 +83,10 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
         using NativeArray<Entity> relayEntities = cache.RelayQuery.ToEntityArray(Allocator.Temp);
         for (int changeIndex = 0; changeIndex < initialLength; changeIndex++)
         {
-            InventoryChangeData change = inventoryChanges[changeIndex].inventoryChangeData;
+            InventoryChangeBuffer inventoryChange = inventoryChanges[changeIndex];
+            InventoryChangeData change = inventoryChange.inventoryChangeData;
             if (change.inventoryAction != InventoryAction.QuickStackToNearbyChests ||
+                ShouldSkipForGuestMode(worldIsReadOnly, inventoryChange.playerEntity, playerGhostLookup) ||
                 change.inventory1 == Entity.Null ||
                 !inventoryLookup.HasBuffer(change.inventory1) ||
                 !containedLookup.HasBuffer(change.inventory1) ||
@@ -104,7 +137,7 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
                             break;
                         }
 
-                        StorageTerminalNetworkDepositPlanner.QueueDepositFromPlayerSlot(
+                        StorageTerminalNetworkDepositPlanner.DropDepositFromPlayerSlot(
                             change.inventory1,
                             slot,
                             int.MaxValue,
@@ -120,13 +153,25 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
                             durabilityLookup,
                             fullnessLookup,
                             petLookup,
-                            inventoryChanges);
+                            inventoryChanges,
+                            in _inventoryHandlerShared,
+                            playerTransform.Position);
                     }
                 }
             }
         }
 
         base.OnUpdate();
+    }
+
+    private static bool ShouldSkipForGuestMode(
+        bool worldIsReadOnly,
+        Entity playerEntity,
+        ComponentLookup<PlayerGhost> playerGhostLookup)
+    {
+        return worldIsReadOnly &&
+               playerGhostLookup.TryGetComponent(playerEntity, out PlayerGhost playerGhost) &&
+               playerGhost.adminPrivileges <= 0;
     }
 
     private void GatherNearbyNetworks(
