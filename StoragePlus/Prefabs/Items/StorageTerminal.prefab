@@ -536,13 +536,13 @@ MonoBehaviour:
   m_Script: {fileID: 863540370, guid: 9a1db145e9314404d8da91bdc1557235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 0
-  sizeY: 0
+  sizeX: 5
+  sizeY: 4
   maxExtraSize: 0
   canOnlyContainOneItemPerSlot: 0
   objectsGetLockedInPlace: 0
   cantAddObjectsToInventory: 0
-  autoTransferEnabled: 0
+  autoTransferEnabled: 1
   slotRequirements: []
   itemsInInventory: []
   addLootFromTable: 0

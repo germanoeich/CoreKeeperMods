@@ -142,6 +142,7 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
                             slot,
                             int.MaxValue,
                             requireExistingMatch: true,
+                            _nearbyNetworks[networkIndex].RelayEntity,
                             _nearbyNetworks[networkIndex].Network.CraftVisibleInventories,
                             simulation,
                             inventoryLookup,
@@ -196,7 +197,7 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
                 continue;
             }
 
-            _nearbyNetworks.Add(new NearbyRelayNetwork(network, math.distancesq(origin, relayTransform.Position)));
+            _nearbyNetworks.Add(new NearbyRelayNetwork(relayEntity, network, math.distancesq(origin, relayTransform.Position)));
         }
 
         _nearbyNetworks.Sort(static (left, right) => left.DistanceSq.CompareTo(right.DistanceSq));
@@ -205,10 +206,12 @@ public partial class StorageTerminalQuickStackRelaySystem : PugSimulationSystemB
     private readonly struct NearbyRelayNetwork
     {
         public readonly StorageNetworkSnapshot Network;
+        public readonly Entity RelayEntity;
         public readonly float DistanceSq;
 
-        public NearbyRelayNetwork(StorageNetworkSnapshot network, float distanceSq)
+        public NearbyRelayNetwork(Entity relayEntity, StorageNetworkSnapshot network, float distanceSq)
         {
+            RelayEntity = relayEntity;
             Network = network;
             DistanceSq = distanceSq;
         }
