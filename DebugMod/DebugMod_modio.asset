@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: DebugMod_modio
   m_EditorClassIdentifier: 
   modId: 5886581
-  modSettings: {fileID: 11400000, guid: 057d6fc490865fdd3b23d310b609a3a5, type: 2}
+  modSettings: {fileID: 11400000, guid: 06eed9698ce62a0a6aca69d51126dd30, type: 2}
   logo: {fileID: 0}
   summary: Graphs and shows FPS and Frame times.
