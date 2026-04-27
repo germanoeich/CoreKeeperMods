@@ -70,7 +70,13 @@ public sealed class StorageTerminalNetworkFullnessHover : UIelement, IStorageTer
 
     internal void SetCapacityPercent(float capacityPercent)
     {
-        _lastCapacityPercent = Mathf.Clamp(capacityPercent, 0f, 100f);
+        float clampedCapacityPercent = Mathf.Clamp(capacityPercent, 0f, 100f);
+        if (Mathf.Approximately(_lastCapacityPercent, clampedCapacityPercent))
+        {
+            return;
+        }
+
+        _lastCapacityPercent = clampedCapacityPercent;
         RefreshPixelColor();
     }
 

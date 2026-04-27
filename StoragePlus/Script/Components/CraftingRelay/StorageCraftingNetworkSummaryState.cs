@@ -1,23 +1,16 @@
 using System;
 using Unity.Entities;
-using Unity.NetCode;
 
-[GhostComponent(PrefabType = GhostPrefabType.All)]
 public struct StorageCraftingNetworkSummaryState : IComponentData
 {
-    [GhostField]
     public ulong networkHash;
 
-    [GhostField]
     public ulong contentsHash;
 
-    [GhostField]
     public int entryCount;
 
-    [GhostField]
     public int usedSlotCount;
 
-    [GhostField]
     public int totalSlotCount;
 }
 
@@ -29,29 +22,21 @@ public enum StorageTerminalSummaryEntryFlags : byte
     VirtualStack = 1 << 1
 }
 
-[GhostComponent(PrefabType = GhostPrefabType.All)]
 [InternalBufferCapacity(0)]
 public struct StorageCraftingNetworkSummaryEntry : IBufferElementData
 {
-    [GhostField]
     public ObjectID objectId;
 
-    [GhostField]
     public int totalAmount;
 
-    [GhostField]
     public int itemAmount;
 
-    [GhostField]
     public int variation;
 
-    [GhostField]
     public int auxDataIndex;
 
-    [GhostField]
     public ulong entryId;
 
-    [GhostField]
     public byte flags;
 
     public readonly bool IsExactMatch => (flags & (byte)StorageTerminalSummaryEntryFlags.ExactMatch) != 0;

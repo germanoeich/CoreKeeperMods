@@ -219,6 +219,11 @@ public sealed class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, ISt
 
     public void UpdateContainingElements(float scroll)
     {
+        if (Mathf.Abs(_currentScroll - scroll) <= 0.001f)
+        {
+            return;
+        }
+
         _currentScroll = scroll;
         UpdateVisibleSlots();
     }
@@ -309,12 +314,17 @@ public sealed class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, ISt
             int column = i % ColumnCount;
             int row = i / ColumnCount;
 
-            slot.visibleSlotIndex = i;
             slot.transform.localPosition = new Vector3(
                 sideStart + column * spread,
                 -row * spread - virtualOffset,
                 0f);
-            slot.Bind(_entries[dataIndex], this, i, dataIndex);
+
+            StorageTerminalItemEntry entry = _entries[dataIndex];
+            if (!slot.IsBoundTo(entry, i, dataIndex))
+            {
+                slot.Bind(entry, this, i, dataIndex);
+            }
+
             slot.gameObject.SetActive(true);
         }
     }

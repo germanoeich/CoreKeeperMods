@@ -186,6 +186,10 @@ MonoBehaviour:
       guid: 8a2f6f37f8b6413b91fbf0a88eb95a11
     - path: Scripts/Generated/ItemDropperRequestSystem__System_6721531270.g.cs
       guid: 
+    - path: Scripts/Generated/StorageConnectorEnableCircleSyncSystem__JobEntity_126525355979.g.cs
+      guid: 
+    - path: Scripts/Generated/StorageConnectorEnableCircleSyncSystem__JobEntity_126525355995.g.cs
+      guid: 
     - path: Scripts/Generated/StorageConnectorEnableCircleSyncSystem__System_12652535590.g.cs
       guid: 
     - path: Scripts/Generated/StorageCraftingRelayDomainSystem__System_8921224230.g.cs
@@ -203,12 +207,6 @@ MonoBehaviour:
     - path: Scripts/Generated/StorageTerminalRelayInventoryDrainSystem__System_11928658040.g.cs
       guid: 
     - path: Scripts/Generated/StorageTerminalWithdrawRpcSystem__System_16835898340.g.cs
-      guid: 
-    - path: Scripts/Generated/GhostComponentSerializerCollection.cs
-      guid: 
-    - path: Scripts/Generated/StorageCraftingNetworkSummaryEntrySerializer.cs
-      guid: 
-    - path: Scripts/Generated/StorageCraftingNetworkSummaryStateSerializer.cs
       guid: 
     - path: Scripts/Generated/StorageTerminalDepositRpcCommandSerializer.cs
       guid: 
@@ -414,7 +412,7 @@ MonoBehaviour:
   - path: Assets/Mods/StoragePlus/SpriteAssetManifest.asset
     hash: 258888585973F279617661FCF0634712AD09786E4E63333C219EFC52DD74819B
   - path: Assets/Mods/StoragePlus/StoragePlus.asset
-    hash: E9DAFB32A181BE7D0AD0D71C394E934B02ECCBF0C4B6A9EFFC993C169E842166
+    hash: F3E0CD34BB695858BC0E7DC0D421509EB1DC27EB9C8B44593AFAA97C9C96B88D
   - path: Assets/Mods/StoragePlus/StoragePlus_modio.asset
     hash: 9F9203674CC65C1BFA68233240F45042EB29DF86D0313CA8929D25F51514C4E1
   - path: Assets/Mods/StoragePlus/StoragePlus_Steam.asset

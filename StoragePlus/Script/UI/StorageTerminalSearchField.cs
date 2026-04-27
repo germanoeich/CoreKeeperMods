@@ -36,6 +36,8 @@ public sealed partial class StorageTerminalSearchField : UIelement, InputManager
 
     public bool inputIsActive { get; private set; }
 
+    public int TextVersion { get; private set; }
+
     [field: SerializeField]
     public int MaxCharactersForOnScreenKeyboard { get; private set; } = 255;
 
@@ -72,6 +74,7 @@ public sealed partial class StorageTerminalSearchField : UIelement, InputManager
             selectedMarker.SetActive(false);
         }
 
+        RenderInputText();
         UpdateHintText();
     }
 
@@ -88,10 +91,11 @@ public sealed partial class StorageTerminalSearchField : UIelement, InputManager
         }
 
         UpdateHintText();
-        UpdateCaretPosition();
-        pugText.Render();
-        TrimToMaxWidth();
-        _currentCharIndex = Mathf.Clamp(_currentCharIndex, 0, pugText.displayedTextString.Length);
+        if (inputIsActive)
+        {
+            UpdateCaretPosition();
+            _currentCharIndex = Mathf.Clamp(_currentCharIndex, 0, pugText.displayedTextString.Length);
+        }
     }
 
     public override void OnSelected()
@@ -168,6 +172,26 @@ public sealed partial class StorageTerminalSearchField : UIelement, InputManager
         else if (pugText.GetText() != string.Empty && hintText.GetText() != string.Empty)
         {
             hintText.Render(string.Empty);
+        }
+    }
+
+    private void RenderInputText()
+    {
+        if (pugText == null)
+        {
+            return;
+        }
+
+        pugText.Render(rewindEffectAnims: false);
+        TrimToMaxWidth();
+        _currentCharIndex = Mathf.Clamp(_currentCharIndex, 0, pugText.displayedTextString.Length);
+    }
+
+    private void MarkTextChanged()
+    {
+        unchecked
+        {
+            TextVersion++;
         }
     }
 
