@@ -208,6 +208,12 @@ MonoBehaviour:
       guid: 
     - path: Scripts/Generated/StorageTerminalWithdrawRpcSystem__System_16835898340.g.cs
       guid: 
+    - path: Scripts/Generated/GhostComponentSerializerCollection.cs
+      guid:
+    - path: Scripts/Generated/StorageCraftingNetworkSummaryEntrySerializer.cs
+      guid:
+    - path: Scripts/Generated/StorageCraftingNetworkSummaryStateSerializer.cs
+      guid:
     - path: Scripts/Generated/StorageTerminalDepositRpcCommandSerializer.cs
       guid: 
     - path: Scripts/Generated/StorageTerminalWithdrawRpcCommandSerializer.cs
@@ -412,7 +418,7 @@ MonoBehaviour:
   - path: Assets/Mods/StoragePlus/SpriteAssetManifest.asset
     hash: 258888585973F279617661FCF0634712AD09786E4E63333C219EFC52DD74819B
   - path: Assets/Mods/StoragePlus/StoragePlus.asset
-    hash: F3E0CD34BB695858BC0E7DC0D421509EB1DC27EB9C8B44593AFAA97C9C96B88D
+    hash: 363948FA6BF8114B02F8ACD4072F5092A7E15A6D4CB45BEB96505A4B8ACA6C91
   - path: Assets/Mods/StoragePlus/StoragePlus_modio.asset
     hash: 9F9203674CC65C1BFA68233240F45042EB29DF86D0313CA8929D25F51514C4E1
   - path: Assets/Mods/StoragePlus/StoragePlus_Steam.asset

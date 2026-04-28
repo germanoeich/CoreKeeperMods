@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using CoreLib.Submodule.UserInterface;
 using Unity.Entities;
-using Unity.NetCode;
 
-[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation | WorldSystemFilterFlags.ClientSimulation, WorldSystemFilterFlags.Default)]
+[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial class StorageCraftingRelaySummarySystem : PugSimulationSystemBase
 {
@@ -21,12 +19,6 @@ public partial class StorageCraftingRelaySummarySystem : PugSimulationSystemBase
 
     protected override void OnUpdate()
     {
-        if (!ShouldUpdateInThisWorld())
-        {
-            base.OnUpdate();
-            return;
-        }
-
         PugDatabase.DatabaseBankCD databaseBank = SystemAPI.GetSingleton<PugDatabase.DatabaseBankCD>();
         StorageNetworkWorldCache cache = StorageNetworkWorldCacheRegistry.GetOrCreate(World);
         cache.EnsureBuilt(databaseBank);
@@ -124,23 +116,6 @@ public partial class StorageCraftingRelaySummarySystem : PugSimulationSystemBase
 
         PruneStaleSummaryCacheEntries();
         base.OnUpdate();
-    }
-
-    private bool ShouldUpdateInThisWorld()
-    {
-        if (!World.IsClient())
-        {
-            return true;
-        }
-
-        if (UserInterfaceModule.GetCurrentInterface<StorageTerminalUI>() != null)
-        {
-            return true;
-        }
-
-        PlayerController player = Manager.main?.player;
-        return player?.activeCraftingHandler != null &&
-               player.activeCraftingHandler != player.playerCraftingHandler;
     }
 
     private static bool NetworkInventoriesChanged(
