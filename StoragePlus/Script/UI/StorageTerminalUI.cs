@@ -51,6 +51,7 @@ public sealed partial class StorageTerminalUI : UIelement, IModUI, IStorageTermi
     private ulong _lastContentsHash;
     private int _lastEntryCount = -1;
     private string _lastFilter = string.Empty;
+    private int _lastSearchTextVersion = int.MinValue;
     private bool _built;
 
     public GameObject Root => gameObject;
@@ -90,7 +91,7 @@ public sealed partial class StorageTerminalUI : UIelement, IModUI, IStorageTermi
         CacheInteractionEntity();
         gameObject.SetActive(true);
         EnsureSortControlsBuilt();
-        RefreshEntries(force: true);
+        RefreshEntries(force: false);
         grid.ShowContainerUI();
     }
 
@@ -101,14 +102,14 @@ public sealed partial class StorageTerminalUI : UIelement, IModUI, IStorageTermi
             searchField.Deactivate(commit: false);
         }
 
-        if (grid != null)
-        {
-            grid.HideContainerUI();
-        }
-
         if (Manager.ui != null && IsSelectionInsideRoot())
         {
             Manager.ui.DeselectAnySelectedUIElement();
+        }
+
+        if (grid != null)
+        {
+            grid.HideContainerUI();
         }
 
         _cachedRelayEntity = Entity.Null;
@@ -268,8 +269,10 @@ public sealed partial class StorageTerminalUI : UIelement, IModUI, IStorageTermi
             searchField.Deactivate(commit: false);
         }
 
-        searchField.SetInputText(string.Empty);
-        _lastFilter = string.Empty;
+        if (!string.IsNullOrEmpty(searchField.GetInputText()))
+        {
+            searchField.SetInputText(string.Empty);
+        }
     }
 
     private void AutoAssignReferences()

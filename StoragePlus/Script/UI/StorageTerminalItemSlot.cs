@@ -72,6 +72,18 @@ public sealed class StorageTerminalItemSlot : SlotUIBase, IStorageTerminalHotSyn
         }
     }
 
+    internal bool IsBoundTo(StorageTerminalItemEntry entry, int visibleSlotIndex, int dataIndex)
+    {
+        return DataIndex == dataIndex &&
+               this.visibleSlotIndex == visibleSlotIndex &&
+               _entry.ObjectId == entry.ObjectId &&
+               _entry.Variation == entry.Variation &&
+               _entry.ContainedObject.auxDataIndex == entry.ContainedObject.auxDataIndex &&
+               _entry.EntryId == entry.EntryId &&
+               _entry.Flags == entry.Flags &&
+               _entry.TotalAmount == entry.TotalAmount;
+    }
+
     protected override void Awake()
     {
         base.Awake();

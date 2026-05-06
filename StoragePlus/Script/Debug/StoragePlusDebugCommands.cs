@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+#if STORAGEPLUS_MEMORY_REPORT
+using System.IO;
+#endif
 using System.Text;
 using QFSW.QC;
 using Unity.Collections;
@@ -6,10 +9,50 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+#if STORAGEPLUS_MEMORY_REPORT
+using UnityEngine.Profiling;
+#endif
 using UnityEngine.Scripting;
 
 public static class StoragePlusDebugCommands
 {
+#if STORAGEPLUS_MEMORY_REPORT
+    [Preserve]
+    [Command("storageplus.memoryReport", "Writes StoragePlus memory counters, Unity object counts, and ECS summary-buffer stats to the log and a file.", QFSW.QC.Platform.AllPlatforms, MonoTargetType.Single)]
+    public static void MemoryReport(string label = "", bool forceGc = false)
+    {
+        if (forceGc)
+        {
+            System.GC.Collect();
+            System.GC.WaitForPendingFinalizers();
+            System.GC.Collect();
+        }
+
+        string safeLabel = SanitizeFileName(string.IsNullOrWhiteSpace(label) ? "snapshot" : label.Trim());
+        string timestamp = System.DateTime.Now.ToString("yyyyMMdd-HHmmss");
+        string directory = Path.Combine(Application.persistentDataPath, "StoragePlusMemoryReports");
+        string path = Path.Combine(directory, timestamp + "-" + safeLabel + ".txt");
+
+        StringBuilder builder = new(8192);
+        builder.AppendLine("StoragePlus memory report");
+        builder.Append("label=").Append(string.IsNullOrWhiteSpace(label) ? "snapshot" : label.Trim())
+            .Append(" frame=").Append(Time.frameCount)
+            .Append(" realtime=").Append(Time.realtimeSinceStartup.ToString("F2"))
+            .Append(" forceGc=").Append(forceGc ? "1" : "0")
+            .AppendLine();
+
+        AppendMemoryCounters(builder);
+        AppendUnityObjectCounts(builder);
+        AppendWorldMemoryStats(builder, "server", Manager.ecs?.ServerWorld);
+        AppendWorldMemoryStats(builder, "client", Manager.ecs?.ClientWorld);
+
+        Directory.CreateDirectory(directory);
+        File.WriteAllText(path, builder.ToString());
+
+        LogToConsole("StoragePlus memory report written: " + path + "\n" + builder.ToString().TrimEnd());
+    }
+#endif
+
     [Preserve]
     [Command("storageplus.listLoadedNetworkEntities", "Lists loaded StoragePlus pipes, connectors, droppers, and terminals and reports connector storage/network state.", QFSW.QC.Platform.AllPlatforms, MonoTargetType.Single)]
     public static void ListLoadedNetworkEntities()
@@ -95,6 +138,159 @@ public static class StoragePlusDebugCommands
         string report = builder.ToString().TrimEnd();
         LogToConsole(report);
     }
+
+#if STORAGEPLUS_MEMORY_REPORT
+    private static void AppendMemoryCounters(StringBuilder builder)
+    {
+        builder.AppendLine();
+        builder.AppendLine("Memory counters (MiB)");
+        AppendMiB(builder, "gcTotal", System.GC.GetTotalMemory(forceFullCollection: false));
+        AppendMiB(builder, "monoUsed", Profiler.GetMonoUsedSizeLong());
+        AppendMiB(builder, "monoHeap", Profiler.GetMonoHeapSizeLong());
+        AppendMiB(builder, "unityAllocated", Profiler.GetTotalAllocatedMemoryLong());
+        AppendMiB(builder, "unityReserved", Profiler.GetTotalReservedMemoryLong());
+        AppendMiB(builder, "unityUnusedReserved", Profiler.GetTotalUnusedReservedMemoryLong());
+
+        try
+        {
+            using System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess();
+            AppendMiB(builder, "processWorkingSet", process.WorkingSet64);
+            AppendMiB(builder, "processPrivate", process.PrivateMemorySize64);
+        }
+        catch (System.Exception ex)
+        {
+            builder.Append("processMemoryUnavailable=").Append(ex.GetType().Name).AppendLine();
+        }
+    }
+
+    private static void AppendUnityObjectCounts(StringBuilder builder)
+    {
+        builder.AppendLine();
+        builder.AppendLine("Unity object counts");
+        AppendCount<GameObject>(builder, "GameObject");
+        AppendCount<Transform>(builder, "Transform");
+        AppendCount<StorageTerminalUI>(builder, "StorageTerminalUI");
+        AppendCount<StorageTerminalGrid>(builder, "StorageTerminalGrid");
+        AppendCount<StorageTerminalItemSlot>(builder, "StorageTerminalItemSlot");
+        AppendCount<StorageTerminalSearchField>(builder, "StorageTerminalSearchField");
+        AppendCount<StorageTerminalNetworkFullnessHover>(builder, "StorageTerminalNetworkFullnessHover");
+        AppendCount<PugText>(builder, "PugText");
+        AppendCount<UIelement>(builder, "UIelement");
+        AppendCount<UIScrollWindow>(builder, "UIScrollWindow");
+        AppendCount<SpriteRenderer>(builder, "SpriteRenderer");
+        AppendCount<MeshRenderer>(builder, "MeshRenderer");
+        AppendCount<MeshFilter>(builder, "MeshFilter");
+        AppendCount<Mesh>(builder, "Mesh");
+        AppendCount<Material>(builder, "Material");
+        AppendCount<Texture>(builder, "Texture");
+        AppendCount<Sprite>(builder, "Sprite");
+    }
+
+    private static void AppendWorldMemoryStats(StringBuilder builder, string label, World world)
+    {
+        builder.AppendLine();
+        builder.Append("World ").Append(label).AppendLine();
+        if (world == null || !world.IsCreated)
+        {
+            builder.AppendLine("  unavailable");
+            return;
+        }
+
+        EntityManager entityManager = world.EntityManager;
+        AppendEntityQueryCount<StoragePipeTag>(builder, entityManager, "pipes");
+        AppendEntityQueryCount<StorageConnectorTag>(builder, entityManager, "connectors");
+        AppendEntityQueryCount<StorageCraftingRelayTag>(builder, entityManager, "relays");
+
+        using EntityQuery relayQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<StorageCraftingRelayTag>());
+        using NativeArray<Entity> relays = relayQuery.ToEntityArray(Allocator.Temp);
+
+        int summaryEntryLength = 0;
+        int summaryEntryCapacity = 0;
+        int resolvedInventoryLength = 0;
+        int resolvedInventoryCapacity = 0;
+        int nonEmptySummaryRelays = 0;
+        ulong summaryContentsHashXor = 0UL;
+
+        for (int i = 0; i < relays.Length; i++)
+        {
+            Entity relay = relays[i];
+            if (entityManager.HasBuffer<StorageCraftingNetworkSummaryEntry>(relay))
+            {
+                DynamicBuffer<StorageCraftingNetworkSummaryEntry> buffer = entityManager.GetBuffer<StorageCraftingNetworkSummaryEntry>(relay);
+                summaryEntryLength += buffer.Length;
+                summaryEntryCapacity += buffer.Capacity;
+                if (buffer.Length > 0)
+                {
+                    nonEmptySummaryRelays++;
+                }
+            }
+
+            if (entityManager.HasBuffer<StorageCraftingNetworkResolvedInventory>(relay))
+            {
+                DynamicBuffer<StorageCraftingNetworkResolvedInventory> buffer = entityManager.GetBuffer<StorageCraftingNetworkResolvedInventory>(relay);
+                resolvedInventoryLength += buffer.Length;
+                resolvedInventoryCapacity += buffer.Capacity;
+            }
+
+            if (entityManager.HasComponent<StorageCraftingNetworkSummaryState>(relay))
+            {
+                summaryContentsHashXor ^= entityManager.GetComponentData<StorageCraftingNetworkSummaryState>(relay).contentsHash;
+            }
+        }
+
+        builder.Append("  relaysWithSummaryEntries=").Append(nonEmptySummaryRelays).AppendLine();
+        builder.Append("  summaryEntries.length=").Append(summaryEntryLength)
+            .Append(" capacity=").Append(summaryEntryCapacity)
+            .AppendLine();
+        builder.Append("  resolvedInventories.length=").Append(resolvedInventoryLength)
+            .Append(" capacity=").Append(resolvedInventoryCapacity)
+            .AppendLine();
+        builder.Append("  summaryContentsHashXor=").Append(summaryContentsHashXor).AppendLine();
+    }
+
+    private static void AppendEntityQueryCount<T>(StringBuilder builder, EntityManager entityManager, string label)
+        where T : unmanaged, IComponentData
+    {
+        using EntityQuery query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<T>());
+        builder.Append("  ").Append(label).Append('=').Append(query.CalculateEntityCount()).AppendLine();
+    }
+
+    private static void AppendCount<T>(StringBuilder builder, string label)
+        where T : UnityEngine.Object
+    {
+        T[] objects = Resources.FindObjectsOfTypeAll<T>();
+        builder.Append("  ").Append(label).Append('=').Append(objects.Length).AppendLine();
+    }
+
+    private static void AppendMiB(StringBuilder builder, string label, long bytes)
+    {
+        double mib = bytes / (1024d * 1024d);
+        builder.Append("  ").Append(label).Append('=').Append(mib.ToString("F2")).AppendLine();
+    }
+
+    private static string SanitizeFileName(string value)
+    {
+        StringBuilder builder = new(value.Length);
+        char[] invalid = Path.GetInvalidFileNameChars();
+        for (int i = 0; i < value.Length; i++)
+        {
+            char c = value[i];
+            bool isInvalid = false;
+            for (int j = 0; j < invalid.Length; j++)
+            {
+                if (c == invalid[j])
+                {
+                    isInvalid = true;
+                    break;
+                }
+            }
+
+            builder.Append(isInvalid ? '_' : c);
+        }
+
+        return builder.Length == 0 ? "snapshot" : builder.ToString();
+    }
+#endif
 
     private static void AppendConnectors(
         StringBuilder builder,

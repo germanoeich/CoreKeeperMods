@@ -32,6 +32,7 @@ public sealed partial class StorageNetworkWorldCache
     private readonly EntityQuery _pipeQuery;
     private readonly EntityQuery _relayQuery;
     private readonly EntityQuery _inventoryQuery;
+    private readonly EntityQuery _directedInventoryQuery;
 
     private readonly Dictionary<long, Entity> _connectorsByPosition = new();
     private readonly HashSet<long> _outputConnectorPositions = new();
@@ -59,7 +60,18 @@ public sealed partial class StorageNetworkWorldCache
 
     public EntityQuery RelayQuery => _relayQuery;
 
-    private int _lastBuiltFrame = -1;
+    private bool _built;
+    private int _lastCheckedFrame = -1;
+    private int _lastConnectorCount = -1;
+    private int _lastPipeCount = -1;
+    private int _lastRelayCount = -1;
+    private int _lastInventoryCount = -1;
+    private int _lastDirectedInventoryCount = -1;
+    private int _lastStorageConnectorOrderVersion;
+    private int _lastOutputConnectorOrderVersion;
+    private int _lastInputConnectorOrderVersion;
+    private int _lastStoragePipeOrderVersion;
+    private int _lastStorageRelayOrderVersion;
 
     public StorageNetworkWorldCache(EntityManager entityManager)
     {
@@ -78,18 +90,31 @@ public sealed partial class StorageNetworkWorldCache
             ComponentType.ReadOnly<ContainedObjectsBuffer>(),
             ComponentType.ReadOnly<LocalTransform>(),
             ComponentType.ReadOnly<ObjectDataCD>());
+        _directedInventoryQuery = entityManager.CreateEntityQuery(
+            ComponentType.ReadOnly<InventoryBuffer>(),
+            ComponentType.ReadOnly<ContainedObjectsBuffer>(),
+            ComponentType.ReadOnly<LocalTransform>(),
+            ComponentType.ReadOnly<ObjectDataCD>(),
+            ComponentType.ReadOnly<DirectionCD>());
     }
 
     public void EnsureBuilt(PugDatabase.DatabaseBankCD database)
     {
         int currentFrame = Time.frameCount;
-        if (_lastBuiltFrame == currentFrame)
+        if (_lastCheckedFrame == currentFrame)
+        {
+            return;
+        }
+
+        _lastCheckedFrame = currentFrame;
+        if (_built && !TopologyNeedsRebuild())
         {
             return;
         }
 
         Rebuild(database);
-        _lastBuiltFrame = currentFrame;
+        _built = true;
+        CaptureTopologyVersions();
     }
 
     public bool TryGetNetworkForRelay(Entity relayEntity, out StorageNetworkSnapshot network)
@@ -204,6 +229,38 @@ public sealed partial class StorageNetworkWorldCache
         CraftMembershipHash = ComputeCraftMembershipHash();
 
         BuildNetworks();
+    }
+
+    private bool TopologyNeedsRebuild()
+    {
+        if (_connectorQuery.CalculateEntityCount() != _lastConnectorCount ||
+            _pipeQuery.CalculateEntityCount() != _lastPipeCount ||
+            _relayQuery.CalculateEntityCount() != _lastRelayCount ||
+            _inventoryQuery.CalculateEntityCount() != _lastInventoryCount ||
+            _directedInventoryQuery.CalculateEntityCount() != _lastDirectedInventoryCount)
+        {
+            return true;
+        }
+
+        return _entityManager.GetComponentOrderVersion<StorageConnectorTag>() != _lastStorageConnectorOrderVersion ||
+               _entityManager.GetComponentOrderVersion<OutputConnectorTag>() != _lastOutputConnectorOrderVersion ||
+               _entityManager.GetComponentOrderVersion<InputConnectorTag>() != _lastInputConnectorOrderVersion ||
+               _entityManager.GetComponentOrderVersion<StoragePipeTag>() != _lastStoragePipeOrderVersion ||
+               _entityManager.GetComponentOrderVersion<StorageCraftingRelayTag>() != _lastStorageRelayOrderVersion;
+    }
+
+    private void CaptureTopologyVersions()
+    {
+        _lastConnectorCount = _connectorQuery.CalculateEntityCount();
+        _lastPipeCount = _pipeQuery.CalculateEntityCount();
+        _lastRelayCount = _relayQuery.CalculateEntityCount();
+        _lastInventoryCount = _inventoryQuery.CalculateEntityCount();
+        _lastDirectedInventoryCount = _directedInventoryQuery.CalculateEntityCount();
+        _lastStorageConnectorOrderVersion = _entityManager.GetComponentOrderVersion<StorageConnectorTag>();
+        _lastOutputConnectorOrderVersion = _entityManager.GetComponentOrderVersion<OutputConnectorTag>();
+        _lastInputConnectorOrderVersion = _entityManager.GetComponentOrderVersion<InputConnectorTag>();
+        _lastStoragePipeOrderVersion = _entityManager.GetComponentOrderVersion<StoragePipeTag>();
+        _lastStorageRelayOrderVersion = _entityManager.GetComponentOrderVersion<StorageCraftingRelayTag>();
     }
 
     private void AddInventoryTileMappings(

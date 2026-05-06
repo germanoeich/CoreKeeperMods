@@ -91,9 +91,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sellValue: -1
   buyValueMultiplier: 1
-  icon: {fileID: 853730825, guid: ee4d3ef9d298ab823ab408e59683c34e, type: 3}
+  icon: {fileID: -1175268481, guid: c289cf6b630309cbcaf22fad7b16b1a6, type: 3}
   iconOffset: {x: 0, y: 0}
-  smallIcon: {fileID: 1316996845, guid: 4a4c9f567dad6f999934375ce24d980c, type: 3}
+  smallIcon: {fileID: 1029730583, guid: c289cf6b630309cbcaf22fad7b16b1a6, type: 3}
   isStackable: 1
   requiredObjectsToCraft:
   - objectName: ScarletBar
@@ -536,13 +536,13 @@ MonoBehaviour:
   m_Script: {fileID: 863540370, guid: 3392f4c23e1d8662d749dabb2361ee02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 0
-  sizeY: 0
+  sizeX: 5
+  sizeY: 4
   maxExtraSize: 0
   canOnlyContainOneItemPerSlot: 0
   objectsGetLockedInPlace: 0
   cantAddObjectsToInventory: 0
-  autoTransferEnabled: 0
+  autoTransferEnabled: 1
   slotRequirements: []
   itemsInInventory: []
   addLootFromTable: 0

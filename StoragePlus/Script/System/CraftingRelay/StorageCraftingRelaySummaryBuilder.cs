@@ -5,6 +5,7 @@ using Unity.Mathematics;
 
 internal sealed class StorageCraftingRelaySummaryBuildResult
 {
+    public ulong InventoryFingerprint;
     public ulong ContentsHash;
     public int UsedSlotCount;
     public int TotalSlotCount;
@@ -24,6 +25,7 @@ internal static class StorageCraftingRelaySummaryBuilder
     {
         Dictionary<long, StorageCraftingNetworkSummaryEntry> groupedEntries = new();
         List<StorageCraftingNetworkSummaryEntry> exactEntries = new();
+        Dictionary<long, ItemSummaryMetadata> itemMetadataByKey = new();
         StorageCraftingRelaySummaryBuildResult result = new();
 
         for (int i = 0; i < network.CraftVisibleInventories.Count; i++)
@@ -42,6 +44,7 @@ internal static class StorageCraftingRelaySummaryBuilder
                 inventoryEntity,
                 inventorySlots,
                 containedObjects,
+                itemMetadataByKey,
                 ref result.UsedSlotCount,
                 ref result.TotalSlotCount,
                 databaseBank,
@@ -79,6 +82,7 @@ internal static class StorageCraftingRelaySummaryBuilder
         Entity inventoryEntity,
         DynamicBuffer<InventoryBuffer> inventorySlots,
         DynamicBuffer<ContainedObjectsBuffer> containedObjects,
+        Dictionary<long, ItemSummaryMetadata> itemMetadataByKey,
         ref int usedSlotCount,
         ref int totalSlotCount,
         PugDatabase.DatabaseBankCD databaseBank,
@@ -99,23 +103,20 @@ internal static class StorageCraftingRelaySummaryBuilder
                     usedSlotCount++;
                 }
 
-                int countContribution = StorageTerminalSummaryUtility.GetCountContribution(
+                ItemSummaryMetadata itemMetadata = GetItemSummaryMetadata(
+                    itemMetadataByKey,
                     databaseBank,
                     durabilityLookup,
                     fullnessLookup,
                     petLookup,
                     objectInSlot);
-                if (objectInSlot.objectID == ObjectID.None || countContribution <= 0)
+                int countContribution = GetCountContribution(objectInSlot, itemMetadata);
+                if (countContribution <= 0)
                 {
                     continue;
                 }
 
-                if (StorageTerminalSummaryUtility.ShouldCreateExactEntry(
-                        databaseBank,
-                        durabilityLookup,
-                        fullnessLookup,
-                        petLookup,
-                        objectInSlot))
+                if (ShouldCreateExactEntry(objectInSlot, itemMetadata))
                 {
                     exactEntries.Add(new StorageCraftingNetworkSummaryEntry
                     {
@@ -148,6 +149,54 @@ internal static class StorageCraftingRelaySummaryBuilder
                 });
             }
         }
+    }
+
+    private static ItemSummaryMetadata GetItemSummaryMetadata(
+        Dictionary<long, ItemSummaryMetadata> itemMetadataByKey,
+        PugDatabase.DatabaseBankCD databaseBank,
+        ComponentLookup<DurabilityCD> durabilityLookup,
+        ComponentLookup<FullnessCD> fullnessLookup,
+        ComponentLookup<PetCD> petLookup,
+        in ContainedObjectsBuffer containedObject)
+    {
+        if (containedObject.objectID == ObjectID.None)
+        {
+            return default;
+        }
+
+        long groupedKey = BuildGroupedKey(containedObject.objectID, containedObject.variation);
+        if (itemMetadataByKey.TryGetValue(groupedKey, out ItemSummaryMetadata itemMetadata))
+        {
+            return itemMetadata;
+        }
+
+        itemMetadata = new ItemSummaryMetadata(
+            StorageTerminalSummaryUtility.IsStackable(databaseBank, containedObject),
+            StorageTerminalSummaryUtility.UsesAmountAsState(databaseBank, durabilityLookup, fullnessLookup, petLookup, containedObject));
+        itemMetadataByKey.Add(groupedKey, itemMetadata);
+        return itemMetadata;
+    }
+
+    private static int GetCountContribution(in ContainedObjectsBuffer containedObject, ItemSummaryMetadata itemMetadata)
+    {
+        if (containedObject.objectID == ObjectID.None)
+        {
+            return 0;
+        }
+
+        if (itemMetadata.UsesAmountAsState || !itemMetadata.IsStackable)
+        {
+            return 1;
+        }
+
+        return containedObject.amount > 0 ? containedObject.amount : 0;
+    }
+
+    private static bool ShouldCreateExactEntry(in ContainedObjectsBuffer containedObject, ItemSummaryMetadata itemMetadata)
+    {
+        return containedObject.auxDataIndex != 0 ||
+               itemMetadata.UsesAmountAsState ||
+               !itemMetadata.IsStackable;
     }
 
     private static long BuildGroupedKey(ObjectID objectId, int variation)
@@ -233,6 +282,18 @@ internal static class StorageCraftingRelaySummaryBuilder
             }
 
             return hash;
+        }
+    }
+
+    private readonly struct ItemSummaryMetadata
+    {
+        public readonly bool IsStackable;
+        public readonly bool UsesAmountAsState;
+
+        public ItemSummaryMetadata(bool isStackable, bool usesAmountAsState)
+        {
+            IsStackable = isStackable;
+            UsesAmountAsState = usesAmountAsState;
         }
     }
 }

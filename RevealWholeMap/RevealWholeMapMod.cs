@@ -1170,7 +1170,7 @@ public sealed class RevealWholeMapMod : IMod
             return;
         }
 
-        player.SetGodMode(true);
+        player.SetGodModeCreative(true);
         SetNoClipEnabled(player, enabled: true);
     }
 
@@ -1190,7 +1190,7 @@ public sealed class RevealWholeMapMod : IMod
 
         player.DebugSetPlayerPosition(_initialPlayerPosition);
         player.SetPlayerPosition(_initialPlayerPosition);
-        player.SetGodMode(_initialGodModeEnabled);
+        player.SetGodModeCreative(_initialGodModeEnabled);
         SetNoClipEnabled(player, _initialNoClipEnabled);
     }
 

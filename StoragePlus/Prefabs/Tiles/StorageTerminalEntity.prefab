@@ -255,7 +255,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2031949956228952708}
   - component: {fileID: 8854003838489346452}
-  - component: {fileID: -1166655241762291478}
   - component: {fileID: 2221792847658608656}
   - component: {fileID: 4422062471611577777}
   m_Layer: 0
@@ -333,21 +332,6 @@ MonoBehaviour:
   m_spriteObjectOrientationHash: 0
   worldLabel: {fileID: 0}
   showSortAndQuickStackButtons: 0
---- !u!114 &-1166655241762291478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3300896875929099702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 276b4b9264304dc2b5f1e3feb621bc98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialSize: 16
-  maxFreeSize: 16
-  maxSize: 1024
 --- !u!95 &2221792847658608656
 Animator:
   serializedVersion: 7

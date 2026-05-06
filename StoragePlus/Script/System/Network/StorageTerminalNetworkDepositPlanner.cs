@@ -53,6 +53,205 @@ internal static class StorageTerminalNetworkDepositPlanner
         ComponentLookup<PetCD> petLookup,
         DynamicBuffer<InventoryChangeBuffer> inventoryChanges)
     {
+        InventoryHandlerShared inventoryHandlerShared = default;
+        return DepositFromPlayerSlot(
+            playerEntity,
+            sourceSlot,
+            requestedAmount,
+            requireExistingMatch,
+            destinationInventories,
+            simulation,
+            inventoryLookup,
+            containedLookup,
+            inventorySlotRequirementLookup,
+            databaseBank,
+            objectCategoryTagsLookup,
+            overrideLegendaryLookup,
+            durabilityLookup,
+            fullnessLookup,
+            petLookup,
+            inventoryChanges,
+            useDropAnimation: false,
+            pickupTarget: Entity.Null,
+            in inventoryHandlerShared,
+            default);
+    }
+
+    public static bool DropDepositFromPlayerSlot(
+        Entity playerEntity,
+        int sourceSlot,
+        int requestedAmount,
+        bool requireExistingMatch,
+        Entity pickupTarget,
+        IList<Entity> destinationInventories,
+        StorageTerminalNetworkDepositSimulation simulation,
+        BufferLookup<InventoryBuffer> inventoryLookup,
+        BufferLookup<ContainedObjectsBuffer> containedLookup,
+        BufferLookup<InventorySlotRequirementBuffer> inventorySlotRequirementLookup,
+        PugDatabase.DatabaseBankCD databaseBank,
+        ComponentLookup<ObjectCategoryTagsCD> objectCategoryTagsLookup,
+        ComponentLookup<OverrideLegendaryForSlotRequirementsCD> overrideLegendaryLookup,
+        ComponentLookup<DurabilityCD> durabilityLookup,
+        ComponentLookup<FullnessCD> fullnessLookup,
+        ComponentLookup<PetCD> petLookup,
+        DynamicBuffer<InventoryChangeBuffer> inventoryChanges,
+        in InventoryHandlerShared inventoryHandlerShared,
+        float3 sourcePosition)
+    {
+        return DepositFromPlayerSlot(
+            playerEntity,
+            sourceSlot,
+            requestedAmount,
+            requireExistingMatch,
+            destinationInventories,
+            simulation,
+            inventoryLookup,
+            containedLookup,
+            inventorySlotRequirementLookup,
+            databaseBank,
+            objectCategoryTagsLookup,
+            overrideLegendaryLookup,
+            durabilityLookup,
+            fullnessLookup,
+            petLookup,
+            inventoryChanges,
+            useDropAnimation: true,
+            pickupTarget: pickupTarget,
+            in inventoryHandlerShared,
+            sourcePosition);
+    }
+
+    public static void MoveSourceSlotToDestinationsOrDrop(
+        Entity sourceInventory,
+        int sourceSlot,
+        IList<Entity> destinationInventories,
+        StorageTerminalNetworkDepositSimulation simulation,
+        BufferLookup<InventoryBuffer> inventoryLookup,
+        BufferLookup<ContainedObjectsBuffer> containedLookup,
+        BufferLookup<InventorySlotRequirementBuffer> inventorySlotRequirementLookup,
+        PugDatabase.DatabaseBankCD databaseBank,
+        ComponentLookup<ObjectCategoryTagsCD> objectCategoryTagsLookup,
+        ComponentLookup<OverrideLegendaryForSlotRequirementsCD> overrideLegendaryLookup,
+        ComponentLookup<DurabilityCD> durabilityLookup,
+        ComponentLookup<FullnessCD> fullnessLookup,
+        ComponentLookup<PetCD> petLookup,
+        in InventoryHandlerShared inventoryHandlerShared,
+        float3 dropPosition)
+    {
+        if (destinationInventories == null || destinationInventories.Count == 0)
+        {
+            DropSourceSlot(in inventoryHandlerShared, sourceInventory, sourceSlot, dropPosition);
+            return;
+        }
+
+        if (!inventoryLookup.HasBuffer(sourceInventory) || !SlotBelongsToInventory(inventoryLookup[sourceInventory], sourceSlot))
+        {
+            return;
+        }
+
+        ContainedObjectsBuffer[] simulatedSourceContents = simulation.GetContents(sourceInventory, containedLookup);
+        if (simulatedSourceContents == null || sourceSlot < 0 || sourceSlot >= simulatedSourceContents.Length)
+        {
+            return;
+        }
+
+        while (sourceSlot < simulatedSourceContents.Length)
+        {
+            ContainedObjectsBuffer sourceObject = simulatedSourceContents[sourceSlot];
+            bool usesExactState = StorageTerminalSummaryUtility.ShouldCreateExactEntry(
+                databaseBank,
+                durabilityLookup,
+                fullnessLookup,
+                petLookup,
+                sourceObject);
+            int sourceItemCount = StorageTerminalSummaryUtility.GetCountContribution(
+                databaseBank,
+                durabilityLookup,
+                fullnessLookup,
+                petLookup,
+                sourceObject);
+            if (sourceObject.objectID == ObjectID.None || sourceItemCount <= 0)
+            {
+                return;
+            }
+
+            bool isStackable = PugDatabase.GetEntityObjectInfo(sourceObject.objectID, databaseBank.databaseBankBlob, sourceObject.variation).isStackable;
+            bool canStackIntoExistingSlots = isStackable && !usesExactState;
+            ObjectDataCD sourceObjectData = sourceObject.objectData;
+            Entity primaryPrefabEntity = PugDatabase.GetPrimaryPrefabEntity(sourceObjectData.objectID, databaseBank.databaseBankBlob, sourceObjectData.variation);
+            ObjectCategoryTagsCD objectTagCD = objectCategoryTagsLookup.HasComponent(primaryPrefabEntity)
+                ? objectCategoryTagsLookup[primaryPrefabEntity]
+                : default;
+
+            if (!TryFindDestinationSlot(
+                    sourceObjectData,
+                    canStackIntoExistingSlots,
+                    destinationInventories,
+                    simulation,
+                    inventoryLookup,
+                    containedLookup,
+                    inventorySlotRequirementLookup,
+                    databaseBank,
+                    objectTagCD,
+                    overrideLegendaryLookup,
+                    out Entity destinationInventory,
+                    out int destinationSlot,
+                    out int capacity))
+            {
+                DropSourceSlot(in inventoryHandlerShared, sourceInventory, sourceSlot, dropPosition);
+                return;
+            }
+
+            int moveAmount = canStackIntoExistingSlots
+                ? math.min(sourceObject.amount, capacity)
+                : sourceItemCount;
+            if (moveAmount <= 0 ||
+                !InventoryUtility.TryMove(
+                    in inventoryHandlerShared,
+                    sourceInventory,
+                    sourceSlot,
+                    destinationInventory,
+                    destinationSlot,
+                    destinationSlot + 1,
+                    moveAmount,
+                    destroyExisting: false))
+            {
+                DropSourceSlot(in inventoryHandlerShared, sourceInventory, sourceSlot, dropPosition);
+                return;
+            }
+
+            ReserveDestinationSlot(
+                simulation.GetContents(destinationInventory, containedLookup),
+                destinationSlot,
+                sourceObject,
+                moveAmount,
+                canStackIntoExistingSlots);
+            ReserveSourceSlot(simulatedSourceContents, sourceSlot, moveAmount, canStackIntoExistingSlots);
+        }
+    }
+
+    private static bool DepositFromPlayerSlot(
+        Entity playerEntity,
+        int sourceSlot,
+        int requestedAmount,
+        bool requireExistingMatch,
+        IList<Entity> destinationInventories,
+        StorageTerminalNetworkDepositSimulation simulation,
+        BufferLookup<InventoryBuffer> inventoryLookup,
+        BufferLookup<ContainedObjectsBuffer> containedLookup,
+        BufferLookup<InventorySlotRequirementBuffer> inventorySlotRequirementLookup,
+        PugDatabase.DatabaseBankCD databaseBank,
+        ComponentLookup<ObjectCategoryTagsCD> objectCategoryTagsLookup,
+        ComponentLookup<OverrideLegendaryForSlotRequirementsCD> overrideLegendaryLookup,
+        ComponentLookup<DurabilityCD> durabilityLookup,
+        ComponentLookup<FullnessCD> fullnessLookup,
+        ComponentLookup<PetCD> petLookup,
+        DynamicBuffer<InventoryChangeBuffer> inventoryChanges,
+        bool useDropAnimation,
+        Entity pickupTarget,
+        in InventoryHandlerShared inventoryHandlerShared,
+        float3 sourcePosition)
+    {
         if (destinationInventories == null || destinationInventories.Count == 0)
         {
             return false;
@@ -137,18 +336,33 @@ internal static class StorageTerminalNetworkDepositPlanner
                 break;
             }
 
-            inventoryChanges.Add(new InventoryChangeBuffer
+            if (useDropAnimation)
             {
-                playerEntity = playerEntity,
-                inventoryChangeData = Create.MoveAmount(
+                InventoryUtility.DropItem(
+                    in inventoryHandlerShared,
                     playerEntity,
                     sourceSlot,
-                    destinationInventory,
-                    destinationSlot,
-                    destinationSlot + 1,
                     moveAmount,
-                    destroyExisting: false)
-            });
+                    sourcePosition,
+                    default,
+                    pickupTarget == Entity.Null ? destinationInventory : pickupTarget,
+                    ignoreRayChecksForPickup: true);
+            }
+            else
+            {
+                inventoryChanges.Add(new InventoryChangeBuffer
+                {
+                    playerEntity = playerEntity,
+                    inventoryChangeData = Create.MoveAmount(
+                        playerEntity,
+                        sourceSlot,
+                        destinationInventory,
+                        destinationSlot,
+                        destinationSlot + 1,
+                        moveAmount,
+                        destroyExisting: false)
+                });
+            }
 
             ReserveDestinationSlot(
                 simulation.GetContents(destinationInventory, containedLookup),
@@ -238,6 +452,31 @@ internal static class StorageTerminalNetworkDepositPlanner
         }
 
         return false;
+    }
+
+    private static void DropSourceSlot(
+        in InventoryHandlerShared inventoryHandlerShared,
+        Entity sourceInventory,
+        int sourceSlot,
+        float3 dropPosition)
+    {
+        if (!inventoryHandlerShared.containedObjectsBufferLookup.HasBuffer(sourceInventory))
+        {
+            return;
+        }
+
+        DynamicBuffer<ContainedObjectsBuffer> contents = inventoryHandlerShared.containedObjectsBufferLookup[sourceInventory];
+        if (sourceSlot < 0 || sourceSlot >= contents.Length || contents[sourceSlot].objectID == ObjectID.None)
+        {
+            return;
+        }
+
+        InventoryUtility.DropItem(
+            in inventoryHandlerShared,
+            sourceInventory,
+            sourceSlot,
+            int.MaxValue,
+            dropPosition);
     }
 
     private static bool SlotBelongsToInventory(DynamicBuffer<InventoryBuffer> inventories, int slot)

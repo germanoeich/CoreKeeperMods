@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb3ef797feb413baf4e7b6494bba03e, type: 3}
   m_Name: ModTileset
   m_EditorClassIdentifier: 
-  tilesetId: StorageNetworkTileset
+  tilesetId: StorageNetworkTileset_old
   layers: {fileID: 11400000, guid: b76f663a6296fb6498647dc84cd0eff7, type: 2}
   overrideMaterials: []
   overrideParticles: []

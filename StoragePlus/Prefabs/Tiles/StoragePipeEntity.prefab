@@ -127,7 +127,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2031949956228952708}
   - component: {fileID: 672968261507469637}
-  - component: {fileID: -6504474743439162702}
   m_Layer: 0
   m_Name: StoragePipeEntity
   m_TagString: Untagged
@@ -197,18 +196,3 @@ MonoBehaviour:
   hasDisableableParticles: 0
   previousHealth: 0
   m_spriteObjectOrientationHash: 0
---- !u!114 &-6504474743439162702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3300896875929099702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 276b4b9264304dc2b5f1e3feb621bc98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialSize: 16
-  maxFreeSize: 16
-  maxSize: 1024

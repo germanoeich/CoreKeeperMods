@@ -20,7 +20,7 @@ MonoBehaviour:
     disableScripts: 0
     accessesExtraAssemblies: 1
     disableHarmonyPatching: 0
-    requiredOn: 1
+    requiredOn: 0
     files:
     - path: Scripts/ModIoLinuxFixMod.cs
       guid: 4d8eb7cc208f4f5db767c8102e8a5b46

@@ -17,6 +17,7 @@ public sealed partial class StorageTerminalUI
             _lastRelayEntity = Entity.Null;
             _lastContentsHash = 0;
             _lastEntryCount = -1;
+            _lastSearchTextVersion = int.MinValue;
             ResetNetworkFullnessCache();
             return;
         }
@@ -31,19 +32,22 @@ public sealed partial class StorageTerminalUI
             _lastRelayEntity = Entity.Null;
             _lastContentsHash = 0;
             _lastEntryCount = -1;
+            _lastSearchTextVersion = int.MinValue;
             ResetNetworkFullnessCache();
             return;
         }
 
-        string filter = searchField != null ? searchField.GetInputText().Trim() : string.Empty;
+        int searchTextVersion = searchField != null ? searchField.TextVersion : 0;
+        string filter = searchTextVersion != _lastSearchTextVersion
+            ? GetCurrentFilterText()
+            : _lastFilter;
         int categoryMask = GetSelectedCategoryMask();
-        int totalItemCount = ComputeSummaryTotalItemCount(summaryEntries);
         bool relayChanged = relayEntity != _lastRelayEntity;
         bool filterChanged = !string.Equals(filter, _lastFilter, StringComparison.Ordinal);
         bool categoryChanged = categoryMask != _lastCategoryMask;
         int sortSignature = GetSortSignature();
         bool sortChanged = sortSignature != _lastSortSignature;
-        ulong summaryEntriesHash = ComputeClientSummaryEntriesHash(summaryEntries);
+        ulong summaryEntriesHash = summaryState.contentsHash;
         int summaryEntriesCount = summaryEntries.Length;
         bool fullnessChanged = summaryState.usedSlotCount != _lastUsedSlotCount ||
                                summaryState.totalSlotCount != _lastTotalSlotCount;
@@ -57,9 +61,12 @@ public sealed partial class StorageTerminalUI
                             summaryEntriesCount != _lastEntryCount;
         if (!needsRefresh)
         {
+            _lastSearchTextVersion = searchTextVersion;
+            _lastFilter = filter;
             return;
         }
 
+        int totalItemCount = ComputeSummaryTotalItemCount(summaryEntries);
         _filteredEntries.Clear();
         for (int i = 0; i < summaryEntries.Length; i++)
         {
@@ -100,6 +107,7 @@ public sealed partial class StorageTerminalUI
         _lastContentsHash = summaryEntriesHash;
         _lastEntryCount = summaryEntriesCount;
         _lastFilter = filter;
+        _lastSearchTextVersion = searchTextVersion;
         _lastCategoryMask = categoryMask;
         _lastSortSignature = sortSignature;
         _lastUsedSlotCount = summaryState.usedSlotCount;
@@ -152,25 +160,15 @@ public sealed partial class StorageTerminalUI
         return containedObject.objectID.ToString();
     }
 
-    private static ulong ComputeClientSummaryEntriesHash(DynamicBuffer<StorageCraftingNetworkSummaryEntry> summaryEntries)
+    private string GetCurrentFilterText()
     {
-        unchecked
+        if (searchField == null)
         {
-            ulong hash = 1469598103934665603UL;
-            for (int i = 0; i < summaryEntries.Length; i++)
-            {
-                StorageCraftingNetworkSummaryEntry entry = summaryEntries[i];
-                hash = (hash ^ (ulong)(uint)entry.objectId) * 1099511628211UL;
-                hash = (hash ^ (ulong)(uint)entry.variation) * 1099511628211UL;
-                hash = (hash ^ (ulong)(uint)entry.totalAmount) * 1099511628211UL;
-                hash = (hash ^ (ulong)(uint)entry.itemAmount) * 1099511628211UL;
-                hash = (hash ^ (ulong)(uint)entry.auxDataIndex) * 1099511628211UL;
-                hash = (hash ^ entry.entryId) * 1099511628211UL;
-                hash = (hash ^ entry.flags) * 1099511628211UL;
-            }
-
-            return hash;
+            return string.Empty;
         }
+
+        string filter = searchField.GetInputText();
+        return string.IsNullOrWhiteSpace(filter) ? string.Empty : filter.Trim();
     }
 
     private static int ComputeSummaryTotalItemCount(DynamicBuffer<StorageCraftingNetworkSummaryEntry> summaryEntries)

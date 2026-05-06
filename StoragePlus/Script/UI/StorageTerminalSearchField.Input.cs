@@ -26,10 +26,18 @@ public sealed partial class StorageTerminalSearchField
         }
 
         string text = input ?? string.Empty;
-        pugText.SetText(text);
-        pugText.Render(rewindEffectAnims: false);
+        if (pugText.GetText() == text)
+        {
+            _currentCharIndex = Mathf.Clamp(_currentCharIndex, 0, pugText.displayedTextString.Length);
+            UpdateHintText();
+            return;
+        }
+
         _currentCharIndex = text.Length;
+        pugText.SetText(text);
+        RenderInputText();
         UpdateHintText();
+        MarkTextChanged();
     }
 
     public void AppendString(string input)
@@ -82,30 +90,38 @@ public sealed partial class StorageTerminalSearchField
 
         _currentCharIndex = ClampCaretIndexToTextElementBoundary(previousText, _currentCharIndex);
 
+        string nextText;
         if (_currentCharIndex == previousText.Length)
         {
-            pugText.SetText(previousText + sanitizedInput);
+            nextText = previousText + sanitizedInput;
         }
         else
         {
-            pugText.SetText(previousText.Insert(_currentCharIndex, sanitizedInput));
+            nextText = previousText.Insert(_currentCharIndex, sanitizedInput);
         }
 
         bool appendedAtEnd = _currentCharIndex == previousText.Length;
         _currentCharIndex += sanitizedInput.Length;
-        pugText.Render(rewindEffectAnims: false);
+        pugText.SetText(nextText);
+        RenderInputText();
 
         if (maxWidth > 0f && pugText.dimensions.width > maxWidth)
         {
             pugText.SetText(previousText);
             _currentCharIndex -= sanitizedInput.Length;
-            pugText.Render(rewindEffectAnims: false);
+            RenderInputText();
         }
         else if (appendedAtEnd)
         {
             _currentCharIndex = pugText.displayedTextString.Length;
+            MarkTextChanged();
+        }
+        else
+        {
+            MarkTextChanged();
         }
 
+        UpdateHintText();
         WasAutoActivated = false;
     }
 
@@ -164,7 +180,9 @@ public sealed partial class StorageTerminalSearchField
         }
 
         pugText.SetText(currentText.Remove(_currentCharIndex, nextTextElementStart - _currentCharIndex));
-        pugText.Render(rewindEffectAnims: false);
+        RenderInputText();
+        UpdateHintText();
+        MarkTextChanged();
     }
 
     public void RemoveCharBehindMarker()
@@ -190,7 +208,9 @@ public sealed partial class StorageTerminalSearchField
 
         pugText.SetText(currentText.Remove(previousTextElementStart, removedLength));
         _currentCharIndex = previousTextElementStart;
-        pugText.Render(rewindEffectAnims: false);
+        RenderInputText();
+        UpdateHintText();
+        MarkTextChanged();
     }
 
     public string GetHintString()

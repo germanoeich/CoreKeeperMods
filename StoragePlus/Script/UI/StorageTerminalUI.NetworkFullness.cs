@@ -26,6 +26,26 @@ public sealed partial class StorageTerminalUI
     private int _lastTotalItemCount = -1;
     private Vector3 _networkFullnessBarFillScaleRootAuthoredScale = Vector3.one;
     private bool _hasNetworkFullnessBarFillScaleRootAuthoredScale;
+    private readonly TextAndFormatFields _networkFullnessHoverTitle = new()
+    {
+        text = "Network usage",
+        dontLocalize = true
+    };
+    private readonly TextAndFormatFields _networkFullnessSlotsLine = new()
+    {
+        dontLocalize = true,
+        color = Color.white * 0.99f,
+        paddingBeneath = 0.125f
+    };
+    private readonly TextAndFormatFields _networkFullnessItemsLine = new()
+    {
+        dontLocalize = true,
+        color = Color.white * 0.95f
+    };
+    private readonly List<TextAndFormatFields> _networkFullnessHoverDescription = new(2);
+    private int _lastRenderedNetworkFullnessSlots = -1;
+    private int _lastRenderedNetworkFullnessTotalSlots = -1;
+    private int _lastRenderedNetworkFullnessItems = -1;
 
     private void ResetNetworkFullnessCache()
     {
@@ -68,6 +88,7 @@ public sealed partial class StorageTerminalUI
         fillScale.y *= ratio;
         networkFullnessBarFillScaleRoot.localScale = fillScale;
         networkFullnessBarHover?.SetCapacityPercent(ratio * 100f);
+        RefreshNetworkFullnessHoverText();
     }
 
     private void EnsureNetworkFullnessBarBuilt()
@@ -117,34 +138,37 @@ public sealed partial class StorageTerminalUI
 
     internal TextAndFormatFields GetNetworkFullnessHoverTitle()
     {
-        return new TextAndFormatFields
-        {
-            text = "Network usage",
-            dontLocalize = true
-        };
+        return _networkFullnessHoverTitle;
     }
 
     internal List<TextAndFormatFields> GetNetworkFullnessHoverDescription()
     {
+        RefreshNetworkFullnessHoverText();
+        return _networkFullnessHoverDescription;
+    }
+
+    private void RefreshNetworkFullnessHoverText()
+    {
+        if (_networkFullnessHoverDescription.Count == 0)
+        {
+            _networkFullnessHoverDescription.Add(_networkFullnessSlotsLine);
+            _networkFullnessHoverDescription.Add(_networkFullnessItemsLine);
+        }
+
         int occupiedSlots = Mathf.Max(0, _lastUsedSlotCount);
         int totalSlots = Mathf.Max(0, _lastTotalSlotCount);
         int totalItems = Mathf.Max(0, _lastTotalItemCount);
-
-        return new List<TextAndFormatFields>
+        if (occupiedSlots == _lastRenderedNetworkFullnessSlots &&
+            totalSlots == _lastRenderedNetworkFullnessTotalSlots &&
+            totalItems == _lastRenderedNetworkFullnessItems)
         {
-            new()
-            {
-                text = $"{occupiedSlots}/{totalSlots} slots",
-                dontLocalize = true,
-                color = Color.white * 0.99f,
-                paddingBeneath = 0.125f
-            },
-            new()
-            {
-                text = $"Total items: {totalItems}",
-                dontLocalize = true,
-                color = Color.white * 0.95f
-            }
-        };
+            return;
+        }
+
+        _networkFullnessSlotsLine.text = $"{occupiedSlots}/{totalSlots} slots";
+        _networkFullnessItemsLine.text = $"Total items: {totalItems}";
+        _lastRenderedNetworkFullnessSlots = occupiedSlots;
+        _lastRenderedNetworkFullnessTotalSlots = totalSlots;
+        _lastRenderedNetworkFullnessItems = totalItems;
     }
 }

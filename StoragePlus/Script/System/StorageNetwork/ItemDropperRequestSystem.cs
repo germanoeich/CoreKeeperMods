@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Inventory;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -17,6 +19,38 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
     {
         public Entity Inventory;
         public float DistanceSq;
+    }
+
+    private readonly struct DroppedItemKey : System.IEquatable<DroppedItemKey>
+    {
+        public readonly long TileKey;
+        public readonly int ObjectId;
+        public readonly int Variation;
+
+        public DroppedItemKey(long tileKey, ObjectID objectId, int variation)
+        {
+            TileKey = tileKey;
+            ObjectId = (int)objectId;
+            Variation = variation;
+        }
+
+        public bool Equals(DroppedItemKey other)
+        {
+            return TileKey == other.TileKey &&
+                   ObjectId == other.ObjectId &&
+                   Variation == other.Variation;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = (int)(TileKey ^ (TileKey >> 32));
+                hash = (hash * 397) ^ ObjectId;
+                hash = (hash * 397) ^ Variation;
+                return hash;
+            }
+        }
     }
 
     protected override void OnCreate()
@@ -42,8 +76,6 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
         StorageNetworkWorldCache cache = StorageNetworkWorldCacheRegistry.GetOrCreate(World);
         cache.EnsureBuilt(databaseBank);
 
-        using NativeArray<Entity> droppedItems = _droppedItemQuery.ToEntityArray(Allocator.Temp);
-
         BufferLookup<InventoryBuffer> inventoryLookup = GetBufferLookup<InventoryBuffer>(isReadOnly: true);
         BufferLookup<ContainedObjectsBuffer> containedLookup = GetBufferLookup<ContainedObjectsBuffer>(isReadOnly: true);
         ComponentLookup<ObjectDataCD> objectDataLookup = GetComponentLookup<ObjectDataCD>(isReadOnly: true);
@@ -54,60 +86,86 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
         ComponentLookup<FullnessCD> fullnessLookup = GetComponentLookup<FullnessCD>(isReadOnly: true);
         ComponentLookup<PetCD> petLookup = GetComponentLookup<PetCD>(isReadOnly: true);
         double elapsedTime = SystemAPI.Time.ElapsedTime;
+        NativeArray<Entity> droppedItems = default;
+        NativeParallelHashSet<DroppedItemKey> droppedItemLookup = default;
 
-        foreach ((RefRO<ObjectFilteringCD> filteringRef, RefRW<ItemDropperTimingCD> timingRef, RefRO<LocalTransform> transformRef, Entity entity) in SystemAPI
-                     .Query<RefRO<ObjectFilteringCD>, RefRW<ItemDropperTimingCD>, RefRO<LocalTransform>>()
-                     .WithAll<StorageConnectorTag, OutputConnectorTag>()
-                     .WithEntityAccess())
+        try
         {
-            ObjectFilteringCD filtering = filteringRef.ValueRO;
-            ref ItemDropperTimingCD timing = ref timingRef.ValueRW;
-            if (!HasActiveWhitelist(filtering) ||
-                !cache.TryGetNetworkForConnector(entity, out StorageNetworkSnapshot network))
+            foreach ((RefRO<ObjectFilteringCD> filteringRef, RefRW<ItemDropperTimingCD> timingRef, RefRO<LocalTransform> transformRef, Entity entity) in SystemAPI
+                         .Query<RefRO<ObjectFilteringCD>, RefRW<ItemDropperTimingCD>, RefRO<LocalTransform>>()
+                         .WithAll<StorageConnectorTag, OutputConnectorTag>()
+                         .WithEntityAccess())
             {
-                timing.hadMatchingDroppedItemLastTick = false;
-                continue;
-            }
+                ObjectFilteringCD filtering = filteringRef.ValueRO;
+                ref ItemDropperTimingCD timing = ref timingRef.ValueRW;
+                if (!HasActiveWhitelist(filtering) ||
+                    !cache.TryGetNetworkForConnector(entity, out StorageNetworkSnapshot network))
+                {
+                    timing.hadMatchingDroppedItemLastTick = false;
+                    continue;
+                }
 
-            float3 dropperPosition = transformRef.ValueRO.Position;
-            bool hasMatchingDroppedItem = HasMatchingDroppedItem(
+                if (!droppedItems.IsCreated)
+                {
+                    droppedItems = _droppedItemQuery.ToEntityArray(Allocator.TempJob);
+                    droppedItemLookup = BuildDroppedItemLookup(
+                        droppedItems,
+                        objectDataLookup,
+                        localTransformLookup,
+                        pickUpLookup,
+                        entityDestroyedLookup,
+                        containedLookup,
+                        Dependency);
+                }
+
+                float3 dropperPosition = transformRef.ValueRO.Position;
+                bool hasMatchingDroppedItem = droppedItemLookup.IsCreated &&
+                                              droppedItemLookup.Contains(new DroppedItemKey(
+                                                  ToTileKey(dropperPosition),
+                                                  filtering.filterObject,
+                                                  filtering.filterVariation));
+                if (hasMatchingDroppedItem)
+                {
+                    timing.hadMatchingDroppedItemLastTick = true;
+                    continue;
+                }
+
+                if (timing.hadMatchingDroppedItemLastTick)
+                {
+                    timing.hadMatchingDroppedItemLastTick = false;
+                    timing.nextAllowedDropTime = elapsedTime + math.max(0d, timing.pickupCooldownSeconds);
+                    continue;
+                }
+
+                if (elapsedTime < timing.nextAllowedDropTime)
+                {
+                    continue;
+                }
+
+                BuildCandidateInventories(network, dropperPosition, localTransformLookup);
+                TryQueueDropRequest(
                     filtering,
-                    dropperPosition,
-                    droppedItems,
-                    objectDataLookup,
-                    localTransformLookup,
-                    pickUpLookup,
-                    entityDestroyedLookup,
-                    containedLookup);
-            if (hasMatchingDroppedItem)
+                    databaseBank,
+                    inventoryLookup,
+                    containedLookup,
+                    durabilityLookup,
+                    fullnessLookup,
+                    petLookup,
+                    inventoryChanges,
+                    GetDropPosition(dropperPosition));
+            }
+        }
+        finally
+        {
+            if (droppedItemLookup.IsCreated)
             {
-                timing.hadMatchingDroppedItemLastTick = true;
-                continue;
+                droppedItemLookup.Dispose();
             }
 
-            if (timing.hadMatchingDroppedItemLastTick)
+            if (droppedItems.IsCreated)
             {
-                timing.hadMatchingDroppedItemLastTick = false;
-                timing.nextAllowedDropTime = elapsedTime + math.max(0d, timing.pickupCooldownSeconds);
-                continue;
+                droppedItems.Dispose();
             }
-
-            if (elapsedTime < timing.nextAllowedDropTime)
-            {
-                continue;
-            }
-
-            BuildCandidateInventories(network, dropperPosition, localTransformLookup);
-            TryQueueDropRequest(
-                filtering,
-                databaseBank,
-                inventoryLookup,
-                containedLookup,
-                durabilityLookup,
-                fullnessLookup,
-                petLookup,
-                inventoryChanges,
-                GetDropPosition(dropperPosition));
         }
     }
 
@@ -215,54 +273,90 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
                filtering.filterObject != ObjectID.None;
     }
 
-    private static bool HasMatchingDroppedItem(
-        ObjectFilteringCD filtering,
-        float3 dropperPosition,
+    private static NativeParallelHashSet<DroppedItemKey> BuildDroppedItemLookup(
         NativeArray<Entity> droppedItems,
         ComponentLookup<ObjectDataCD> objectDataLookup,
         ComponentLookup<LocalTransform> localTransformLookup,
         ComponentLookup<PickUpItemCD> pickUpLookup,
         ComponentLookup<EntityDestroyedCD> entityDestroyedLookup,
-        BufferLookup<ContainedObjectsBuffer> containedLookup)
+        BufferLookup<ContainedObjectsBuffer> containedLookup,
+        JobHandle inputDeps)
     {
-        long dropperTileKey = ToTileKey(dropperPosition);
-
-        for (int i = 0; i < droppedItems.Length; i++)
+        if (droppedItems.Length == 0)
         {
-            Entity droppedItemEntity = droppedItems[i];
-            if (entityDestroyedLookup.HasComponent(droppedItemEntity) &&
-                entityDestroyedLookup.IsComponentEnabled(droppedItemEntity))
+            return default;
+        }
+
+        NativeParallelHashSet<DroppedItemKey> lookup = new(droppedItems.Length, Allocator.TempJob);
+        new BuildDroppedItemLookupJob
+        {
+            DroppedItems = droppedItems,
+            ObjectDataLookup = objectDataLookup,
+            LocalTransformLookup = localTransformLookup,
+            PickUpLookup = pickUpLookup,
+            EntityDestroyedLookup = entityDestroyedLookup,
+            ContainedLookup = containedLookup,
+            DroppedItemLookup = lookup.AsParallelWriter()
+        }.Schedule(droppedItems.Length, 64, inputDeps).Complete();
+
+        return lookup;
+    }
+
+    [BurstCompile]
+    private struct BuildDroppedItemLookupJob : IJobParallelFor
+    {
+        [ReadOnly]
+        public NativeArray<Entity> DroppedItems;
+
+        [ReadOnly]
+        public ComponentLookup<ObjectDataCD> ObjectDataLookup;
+
+        [ReadOnly]
+        public ComponentLookup<LocalTransform> LocalTransformLookup;
+
+        [ReadOnly]
+        public ComponentLookup<PickUpItemCD> PickUpLookup;
+
+        [ReadOnly]
+        public ComponentLookup<EntityDestroyedCD> EntityDestroyedLookup;
+
+        [ReadOnly]
+        public BufferLookup<ContainedObjectsBuffer> ContainedLookup;
+
+        public NativeParallelHashSet<DroppedItemKey>.ParallelWriter DroppedItemLookup;
+
+        public void Execute(int index)
+        {
+            Entity droppedItemEntity = DroppedItems[index];
+            if (EntityDestroyedLookup.HasComponent(droppedItemEntity) &&
+                EntityDestroyedLookup.IsComponentEnabled(droppedItemEntity))
             {
-                continue;
+                return;
             }
 
-            if (objectDataLookup[droppedItemEntity].objectID != ObjectID.DroppedItem)
+            if (ObjectDataLookup[droppedItemEntity].objectID != ObjectID.DroppedItem)
             {
-                continue;
+                return;
             }
 
-            PickUpItemCD pickUpItem = pickUpLookup[droppedItemEntity];
+            PickUpItemCD pickUpItem = PickUpLookup[droppedItemEntity];
             if (pickUpItem.state == PickUpItemState.IsBeingPickedUp ||
                 pickUpItem.state == PickUpItemState.ForcePickUp ||
                 pickUpItem.state == PickUpItemState.HasBeenPickedUp)
             {
-                continue;
+                return;
             }
 
-            if (ToTileKey(localTransformLookup[droppedItemEntity].Position) != dropperTileKey ||
-                !TryGetDroppedItem(containedLookup[droppedItemEntity], out ContainedObjectsBuffer droppedObject))
+            if (!TryGetDroppedItem(ContainedLookup[droppedItemEntity], out ContainedObjectsBuffer droppedObject))
             {
-                continue;
+                return;
             }
 
-            if (droppedObject.objectID == filtering.filterObject &&
-                droppedObject.variation == filtering.filterVariation)
-            {
-                return true;
-            }
+            DroppedItemLookup.Add(new DroppedItemKey(
+                ToTileKey(LocalTransformLookup[droppedItemEntity].Position),
+                droppedObject.objectID,
+                droppedObject.variation));
         }
-
-        return false;
     }
 
     private static bool TryGetDroppedItem(
