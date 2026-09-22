@@ -93,10 +93,14 @@ public sealed partial class StorageTerminalUI : UIelement, IModUI, IStorageTermi
         EnsureSortControlsBuilt();
         RefreshEntries(force: false);
         grid.ShowContainerUI();
+        RefreshNavigationLinks();
+        _controllerFocusPending = true;
     }
 
     public void HideUI()
     {
+        UnlinkPlayerInventory();
+        _controllerFocusPending = false;
         if (searchField != null && searchField.inputIsActive)
         {
             searchField.Deactivate(commit: false);
@@ -128,12 +132,14 @@ public sealed partial class StorageTerminalUI : UIelement, IModUI, IStorageTermi
         UpdateLayoutScale();
         if (ShouldCloseFromInteract())
         {
-            Manager.ui.HideAllInventoryAndCraftingUI();
+            Manager.ui.TryHideAllInventoryAndCraftingUI();
             return;
         }
 
+        UpdateControllerActions();
         bool hotSyncApplied = TryApplyHotSync();
         RefreshEntries(force: hotSyncApplied);
+        UpdateControllerFocus();
     }
 
     internal void RequestWithdraw(StorageTerminalItemEntry entry, int amount)

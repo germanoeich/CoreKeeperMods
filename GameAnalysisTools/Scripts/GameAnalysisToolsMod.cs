@@ -66,7 +66,13 @@ public sealed class GameAnalysisToolsMod : IMod
             outputPath = null;
             waitReason = null;
 
-            PugMapTileset tileset = TilesetTypeUtility.GetTileset((int)TargetTileset);
+            if (!ScriptableData.isLoaded)
+            {
+                waitReason = "Scriptable data was not loaded yet.";
+                return false;
+            }
+
+            TilesetLayerDefinitionDataBlock tileset = TilesetDataBlock.Get((int)TargetTileset)?.layerDefinition.Get();
             if (tileset == null)
             {
                 waitReason = $"Tileset '{TargetTileset}' was not available yet.";
@@ -81,7 +87,7 @@ public sealed class GameAnalysisToolsMod : IMod
             }
 
             Texture2D texture = GetTargetTexture();
-            if (texture == null)
+            if (texture == null || texture == TilesetTextureLoader.PlaceholderTexture || texture == TilesetTextureLoader.ErrorTexture)
             {
                 waitReason = $"Texture for '{TargetTileset}/{TargetLayer}' was not available yet.";
                 return false;
@@ -100,12 +106,12 @@ public sealed class GameAnalysisToolsMod : IMod
 
         private static Texture2D GetTargetTexture()
         {
-            if (TilesetTypeUtility.GetAdaptiveTexture((int)TargetTileset, TargetLayer, TextureType.REGULAR) is Texture2D adaptiveTexture)
+            if (TilesetTextureLoader.GetAdaptiveTexture((int)TargetTileset, TargetLayer, TextureType.REGULAR) is Texture2D adaptiveTexture)
             {
                 return adaptiveTexture;
             }
 
-            if (TilesetTypeUtility.GetTexture((int)TargetTileset, TargetLayer, TextureType.REGULAR) is Texture2D texture)
+            if (TilesetTextureLoader.GetSourceTexture((int)TargetTileset, TargetLayer, TextureType.REGULAR) is Texture2D texture)
             {
                 return texture;
             }
@@ -140,7 +146,6 @@ public sealed class GameAnalysisToolsMod : IMod
                         break;
                     case QuadGenerator.FillType.RandomFill:
                     case QuadGenerator.FillType.RandomFillEditorOnly:
-                    case QuadGenerator.FillType.CustomFill:
                         DumpDirectState(sb, generator, texture, state);
                         break;
                     default:

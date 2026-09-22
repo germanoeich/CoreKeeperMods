@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, IStorageTerminalHotSyncAware
+public sealed partial class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, IStorageTerminalHotSyncAware
 {
     [SerializeField]
     [Min(1)]
@@ -185,6 +185,8 @@ public sealed class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, ISt
     internal void SetEntries(List<StorageTerminalItemEntry> entries, bool resetScroll)
     {
         StorageTerminalItemSlot selectedSlotBeforeRefresh = Manager.ui != null ? Manager.ui.currentSelectedUIElement as StorageTerminalItemSlot : null;
+        bool selectionWasInGrid = selectedSlotBeforeRefresh != null && selectedSlotBeforeRefresh.transform.IsChildOf(itemSlotsRoot.transform);
+        int selectedIndexBeforeRefresh = selectionWasInGrid ? selectedSlotBeforeRefresh.DataIndex : -1;
         StorageTerminalItemSlot.SelectionIdentity selectedIdentityBeforeRefresh = selectedSlotBeforeRefresh != null
             ? selectedSlotBeforeRefresh.Identity
             : default;
@@ -206,7 +208,11 @@ public sealed class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, ISt
         }
 
         UpdateVisibleSlots();
-        if (Manager.ui.currentSelectedUIElement is StorageTerminalItemSlot selectedSlot &&
+        if (selectionWasInGrid && StorageTerminalUIUtility.IsUsingController())
+        {
+            RestoreControllerSelection(selectedIdentityBeforeRefresh, selectedIndexBeforeRefresh);
+        }
+        else if (Manager.ui != null && Manager.ui.currentSelectedUIElement is StorageTerminalItemSlot selectedSlot &&
             selectedSlot.transform.IsChildOf(itemSlotsRoot.transform) &&
             (!selectedSlot.gameObject.activeInHierarchy ||
              (selectedSlot == selectedSlotBeforeRefresh && !selectedSlot.Identity.Equals(selectedIdentityBeforeRefresh))))
@@ -231,7 +237,8 @@ public sealed class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, ISt
     public bool IsBottomElementSelected()
     {
         return Manager.ui.currentSelectedUIElement is StorageTerminalItemSlot slot &&
-               slot.DataIndex >= _entries.Count - ColumnCount;
+               slot.DataIndex >= 0 &&
+               slot.DataIndex / ColumnCount == (_entries.Count - 1) / ColumnCount;
     }
 
     public bool IsTopElementSelected()
@@ -358,7 +365,7 @@ public sealed class StorageTerminalGrid : ItemSlotsUIContainer, IScrollable, ISt
 
     private void ClampScrollToContent()
     {
-        float maxScroll = Mathf.Max(0f, GetCurrentWindowHeight() - VisibleRowCount * spread);
+        float maxScroll = MaxScroll;
         if (_currentScroll <= maxScroll)
         {
             return;

@@ -15,4 +15,9 @@ MonoBehaviour:
   modId: 5866290
   modSettings: {fileID: 11400000, guid: 8eb8d7a77d390b4d58cba2dff3a0a130, type: 2}
   logo: {fileID: 0}
+  title: StoragePlus
   summary: Build your own storage network and access all your items in a single place!
+  visible: 1
+  tags:
+  - quality of life
+  - overhaul

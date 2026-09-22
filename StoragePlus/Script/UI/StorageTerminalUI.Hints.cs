@@ -15,16 +15,30 @@ public sealed partial class StorageTerminalUI
         RefreshHintButtonVisuals();
     }
 
-    internal TextAndFormatFields CreateInteractionHintLine(string description, params string[] bindingActionNames)
+    internal TextAndFormatFields CreateInteractionHintLine(string description, params PlayerInput.InputType[] bindingActions)
     {
         return !_showInteractionHints
             ? null
-            : StorageTerminalUIUtility.CreateInteractionHintLine(description, StorageTerminalUIUtility.ShouldPreferJoystickHints(), bindingActionNames);
+            : StorageTerminalUIUtility.CreateInteractionHintLine(description, StorageTerminalUIUtility.ShouldPreferJoystickHints(), bindingActions);
     }
 
-    internal TextAndFormatFields CreateAlwaysVisibleInteractionHintLine(string description, params string[] bindingActionNames)
+    internal TextAndFormatFields CreateSecondaryInteractionHintLine(string description)
     {
-        return StorageTerminalUIUtility.CreateInteractionHintLine(description, StorageTerminalUIUtility.ShouldPreferJoystickHints(), bindingActionNames);
+        return CreateInteractionHintLine(description, StorageTerminalUIUtility.IsUsingController()
+            ? ControllerSecondaryAction
+            : PlayerInput.InputType.UI_SECOND_INTERACT);
+    }
+
+    internal TextAndFormatFields CreateFetchTenInteractionHintLine()
+    {
+        return StorageTerminalUIUtility.IsUsingController()
+            ? CreateInteractionHintLine("Fetch 10", ControllerFetchTenAction)
+            : CreateInteractionHintLine("Fetch 10", PlayerInput.InputType.PICK_UP_10, PlayerInput.InputType.UI_INTERACT);
+    }
+
+    internal TextAndFormatFields CreateAlwaysVisibleInteractionHintLine(string description, params PlayerInput.InputType[] bindingActions)
+    {
+        return StorageTerminalUIUtility.CreateInteractionHintLine(description, StorageTerminalUIUtility.ShouldPreferJoystickHints(), bindingActions);
     }
 
     internal void AppendInteractionHints(List<TextAndFormatFields> lines, params TextAndFormatFields[] hintLines)
@@ -70,7 +84,7 @@ public sealed partial class StorageTerminalUI
             }
         };
 
-        TextAndFormatFields toggleHint = CreateAlwaysVisibleInteractionHintLine("Toggle tooltip hints", "UIInteract");
+        TextAndFormatFields toggleHint = CreateAlwaysVisibleInteractionHintLine("Toggle tooltip hints", PlayerInput.InputType.UI_INTERACT);
         if (toggleHint != null)
         {
             lines.Add(toggleHint);

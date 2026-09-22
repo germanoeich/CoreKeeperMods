@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fileId: 3684426535
   modOwner: 76561198823762629
-  modName: 'StoragePlus [BETA]'
+  modId: StoragePlus
+  modName: StoragePlus
   selectedPath: /home/gin/.steam/steam/steamapps/common/Core Keeper/CoreKeeper_Data/StreamingAssets/Mods/StoragePlus
   tags:
   - Quality of Life

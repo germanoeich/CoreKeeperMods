@@ -10,7 +10,6 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
     }
 
     private static readonly Color ActiveBackgroundColor = new(0.8f, 0.9f, 1f, 1f);
-    private static readonly Color ActiveBorderColor = new(0.92f, 0.97f, 1f, 1f);
 
     private StorageTerminalUI owner;
     private StorageTerminalItemCategory category;
@@ -36,7 +35,6 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
     private SpriteRenderer activeBorderRenderer;
 
     private Color _backgroundDefaultColor;
-    private Color _borderDefaultColor;
     private bool _hasVisualCache;
 
     private void Reset()
@@ -52,6 +50,8 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
     protected override void Awake()
     {
         StorageTerminalUIUtility.EnsureUiElementLists(this);
+        AssignSerializedReferences();
+        DisableIdleHighlight();
         CacheDefaultColors();
         base.Awake();
         RefreshVisuals(force: true);
@@ -184,7 +184,7 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
                 });
             }
 
-            owner.AppendInteractionHints(lines, owner.CreateInteractionHintLine("Reset all filters", "UIInteract"));
+            owner.AppendInteractionHints(lines, owner.CreateInteractionHintLine("Reset all filters", PlayerInput.InputType.UI_INTERACT));
             return lines;
         }
 
@@ -200,7 +200,7 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
 
         owner.AppendInteractionHints(
             lines,
-            owner.CreateInteractionHintLine(owner.IsCategorySelected(category) ? "Remove filter" : "Add filter", "UIInteract"));
+            owner.CreateInteractionHintLine(owner.IsCategorySelected(category) ? "Remove filter" : "Add filter", PlayerInput.InputType.UI_INTERACT));
         return lines.Count > 0 ? lines : null;
     }
 
@@ -213,6 +213,8 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
 
     public void OnHotSyncApplied()
     {
+        AssignSerializedReferences();
+        DisableIdleHighlight();
         CacheDefaultColors();
         StorageTerminalFilterIconAuthoring iconAuthoring = GetComponent<StorageTerminalFilterIconAuthoring>();
         if (mode == ButtonMode.Reset)
@@ -257,11 +259,6 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
             background.color = isSelected ? ActiveBackgroundColor : _backgroundDefaultColor;
         }
 
-        if (border != null)
-        {
-            border.color = isSelected ? ActiveBorderColor : _borderDefaultColor;
-        }
-
         if (activeBorder != null)
         {
             if (force || activeBorder.activeSelf != isSelected)
@@ -294,6 +291,24 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
         spritesShownPressed ??= new List<SpriteRenderer>();
     }
 
+    private void DisableIdleHighlight()
+    {
+        if (border == null)
+        {
+            return;
+        }
+
+        // The 1.3 slot highlight is animated. Filters use their static active and hover borders.
+        spritesShownUnpressed.Remove(border);
+        spritesShownPressed.Remove(border);
+        Animator animator = border.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.enabled = false;
+        }
+        border.gameObject.SetActive(false);
+    }
+
     private static void ApplySpriteSize(SpriteRenderer spriteRenderer, Vector2 cellSize)
     {
         if (spriteRenderer == null)
@@ -306,10 +321,9 @@ public sealed class StorageTerminalFilterButton : ButtonUIElement, IStorageTermi
 
     private void CacheDefaultColors()
     {
-        if (!_hasVisualCache && background != null && border != null)
+        if (!_hasVisualCache && background != null)
         {
             _backgroundDefaultColor = background.color;
-            _borderDefaultColor = border.color;
             _hasVisualCache = true;
         }
     }

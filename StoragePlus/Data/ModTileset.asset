@@ -13,16 +13,40 @@ MonoBehaviour:
   m_Name: ModTileset
   m_EditorClassIdentifier: 
   tilesetId: StorageNetworkTileset_old
-  layers: {fileID: 11400000, guid: b76f663a6296fb6498647dc84cd0eff7, type: 2}
+  icon: {fileID: 0}
+  layers: {fileID: 11400000, guid: 977be1077a6ebc4c0944c517c55ee496, type: 2}
   overrideMaterials: []
   overrideParticles: []
   tilesetTextures:
-    texture: {fileID: 2800000, guid: 60c953587c1acfc91b3cf8a0afd066b3, type: 3}
-    emissiveTexture: {fileID: 2800000, guid: 8a72bbe4a9d2cb8fdbc72058d8f74221, type: 3}
-    effectMaskTexture: {fileID: 0}
-    normalsTexture: {fileID: 0}
-    seasonalTextures: []
-  tilesetTexture: {fileID: 2800000, guid: 60c953587c1acfc91b3cf8a0afd066b3, type: 3}
-  tilesetEmissiveTexture: {fileID: 2800000, guid: 8a72bbe4a9d2cb8fdbc72058d8f74221,
-    type: 3}
-  adaptiveTilesetTextures: []
+    textureRef:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    emissiveTextureRef:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    effectMaskTextureRef:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    normalsTextureRef:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    seasonalTextureRefs: []
+  tilesetTexture: {fileID: -6550260395644767177, guid: cd66effdc1fc65760933d3808d7455f1,
+    type: 2}
+  tilesetEmissiveTexture: {fileID: 5633907391305274584, guid: cd66effdc1fc65760933d3808d7455f1,
+    type: 2}
+  adaptiveTilesetTextures:
+    keys: 
+    values: []

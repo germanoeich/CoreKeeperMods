@@ -110,11 +110,11 @@ public sealed class StorageTerminalSortButton : ButtonUIElement, IStorageTermina
         owner.AppendInteractionHints(
             lines,
             mode == StorageTerminalSortButtonMode.Sorter
-                ? owner.CreateInteractionHintLine("Next sort", "UIInteract")
-                : owner.CreateInteractionHintLine("Toggle sort order", "UIInteract"),
+                ? owner.CreateInteractionHintLine("Next sort", PlayerInput.InputType.UI_INTERACT)
+                : owner.CreateInteractionHintLine("Toggle sort order", PlayerInput.InputType.UI_INTERACT),
             mode == StorageTerminalSortButtonMode.Sorter
-                ? owner.CreateInteractionHintLine("Previous sort", "UISecondInteract")
-                : owner.CreateInteractionHintLine("Toggle sort order", "UISecondInteract"));
+                ? owner.CreateSecondaryInteractionHintLine("Previous sort")
+                : owner.CreateSecondaryInteractionHintLine("Toggle sort order"));
         return lines;
     }
 

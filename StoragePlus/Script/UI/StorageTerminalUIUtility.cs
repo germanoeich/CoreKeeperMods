@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Rewired;
 using CoreLib.Submodule.UserInterface.Component;
 using UnityEngine;
 
@@ -55,53 +56,48 @@ internal static class StorageTerminalUIUtility
         {
             ReplaceUiElementList(searchField.bottomUIElements, grid);
             ClearUiElementList(searchField.topUIElements);
-            ClearUiElementList(searchField.leftUIElements);
-            ReplaceUiElementList(searchField.rightUIElements, GetFirstAvailable(sortButton, sortOrderButton, showFiltersButton, hintTextButton));
+            ReplaceUiElementList(searchField.leftUIElements, GetFirstAvailable(sortButton, sortOrderButton, hintTextButton));
+            ReplaceUiElementList(searchField.rightUIElements, showFiltersButton);
         }
 
         if (sortButton != null)
         {
-            ClearUiElementList(sortButton.topUIElements);
-            ReplaceUiElementList(sortButton.bottomUIElements, grid);
-            ReplaceUiElementList(sortButton.leftUIElements, searchField);
-            ReplaceUiElementList(sortButton.rightUIElements, GetFirstAvailable(sortOrderButton, showFiltersButton, hintTextButton));
+            ReplaceUiElementList(sortButton.topUIElements, searchField);
+            ReplaceUiElementList(sortButton.bottomUIElements, GetFirstAvailable(sortOrderButton, hintTextButton, grid));
+            ClearUiElementList(sortButton.leftUIElements);
+            ReplaceUiElementList(sortButton.rightUIElements, grid);
         }
 
         if (sortOrderButton != null)
         {
-            ClearUiElementList(sortOrderButton.topUIElements);
-            ReplaceUiElementList(sortOrderButton.bottomUIElements, grid);
-            if (sortButton != null)
-            {
-                ReplaceUiElementList(sortOrderButton.leftUIElements, sortButton);
-            }
-            else
-            {
-                ReplaceUiElementList(sortOrderButton.leftUIElements, searchField);
-            }
-            ReplaceUiElementList(sortOrderButton.rightUIElements, GetFirstAvailable(showFiltersButton, hintTextButton));
+            ReplaceUiElementList(sortOrderButton.topUIElements, GetFirstAvailable(sortButton, searchField));
+            ReplaceUiElementList(sortOrderButton.bottomUIElements, GetFirstAvailable(hintTextButton, grid));
+            ClearUiElementList(sortOrderButton.leftUIElements);
+            ReplaceUiElementList(sortOrderButton.rightUIElements, grid);
         }
 
         if (showFiltersButton != null)
         {
             ClearUiElementList(showFiltersButton.topUIElements);
-            ReplaceUiElementList(showFiltersButton.bottomUIElements, GetFirstAvailable(hintTextButton, grid));
-            ReplaceUiElementList(showFiltersButton.leftUIElements, GetFirstAvailable(sortOrderButton, sortButton, searchField));
-            ReplaceUiElementList(showFiltersButton.rightUIElements, hintTextButton);
+            ReplaceUiElementList(showFiltersButton.bottomUIElements, grid);
+            ReplaceUiElementList(showFiltersButton.leftUIElements, searchField);
+            ClearUiElementList(showFiltersButton.rightUIElements);
         }
 
         if (hintTextButton != null)
         {
-            ClearUiElementList(hintTextButton.topUIElements);
-            ReplaceUiElementList(hintTextButton.bottomUIElements, grid);
-            ReplaceUiElementList(hintTextButton.leftUIElements, GetFirstAvailable(showFiltersButton, sortOrderButton, sortButton, searchField));
-            ClearUiElementList(hintTextButton.rightUIElements);
+            ReplaceUiElementList(hintTextButton.topUIElements, GetFirstAvailable(sortOrderButton, sortButton, searchField));
+            ReplaceUiElementList(hintTextButton.bottomUIElements, Manager.ui?.playerInventoryUI);
+            ClearUiElementList(hintTextButton.leftUIElements);
+            ReplaceUiElementList(hintTextButton.rightUIElements, grid);
         }
 
         if (grid != null)
         {
-            ReplaceUiElementList(grid.topUIElements, searchField, sortButton, sortOrderButton, showFiltersButton, hintTextButton);
-            ClearUiElementList(grid.bottomUIElements);
+            ReplaceUiElementList(grid.topUIElements, searchField, showFiltersButton);
+            ReplaceUiElementList(grid.bottomUIElements, Manager.ui?.playerInventoryUI);
+            ReplaceUiElementList(grid.leftUIElements, sortButton, sortOrderButton, hintTextButton);
+            ReplaceUiElementList(grid.rightUIElements, Manager.ui?.playerInventoryUI);
         }
     }
 
@@ -112,6 +108,22 @@ internal static class StorageTerminalUIUtility
         element.leftUIElements ??= new List<UIelement>();
         element.rightUIElements ??= new List<UIelement>();
         element.childElements ??= new List<UIelement>();
+    }
+
+    public static bool IsUsingController()
+    {
+        return Manager.input != null && !Manager.input.SystemPrefersKeyboardAndMouse();
+    }
+
+    public static void SelectForController(UIelement element)
+    {
+        if (element == null || Manager.ui == null)
+        {
+            return;
+        }
+
+        element.Select();
+        Manager.ui.mouse?.PlaceMousePositionOnSelectedUIElementWhenControlledByJoystick();
     }
 
     public static void ReplaceUiElementList(List<UIelement> target, params UIelement[] elements)
@@ -172,35 +184,26 @@ internal static class StorageTerminalUIUtility
 
     public static bool ShouldPreferJoystickHints()
     {
-        return Manager.input != null &&
-               Manager.input.IsAnyGamepadConnected() &&
-               Manager.input.singleplayerInputModule != null &&
-               !Manager.input.singleplayerInputModule.PrefersKeyboardAndMouse();
+        return IsUsingController();
     }
 
     public static TextAndFormatFields CreateInteractionHintLine(
         string description,
         bool prefersJoystick,
-        params string[] bindingActionNames)
+        params PlayerInput.InputType[] bindingActions)
     {
-        if (string.IsNullOrWhiteSpace(description) || Manager.ui == null || bindingActionNames == null || bindingActionNames.Length == 0)
+        if (string.IsNullOrWhiteSpace(description) || Manager.ui == null || bindingActions == null || bindingActions.Length == 0)
         {
             return null;
         }
 
-        List<string> bindingParts = new(bindingActionNames.Length);
-        for (int i = 0; i < bindingActionNames.Length; i++)
+        List<string> bindingParts = new(bindingActions.Length);
+        for (int i = 0; i < bindingActions.Length; i++)
         {
-            string bindingActionName = bindingActionNames[i];
-            if (string.IsNullOrWhiteSpace(bindingActionName))
-            {
-                continue;
-            }
-
-            string shortCutString = Manager.ui.GetShortCutString(bindingActionName, prefersJoystick);
+            string shortCutString = GetInteractionShortcut(bindingActions[i], prefersJoystick);
             if (string.IsNullOrWhiteSpace(shortCutString))
             {
-                continue;
+                return null;
             }
 
             bindingParts.Add(PugText.GetButtonStringForThai(shortCutString));
@@ -218,6 +221,42 @@ internal static class StorageTerminalUIUtility
             dontLocalizeFormatFields = true,
             color = Color.white * 0.95f
         };
+    }
+
+    private static string GetInteractionShortcut(PlayerInput.InputType action, bool prefersJoystick)
+    {
+        if (!prefersJoystick)
+        {
+            return Manager.ui.GetShortCutString((int)action, prefersJoystick: false);
+        }
+
+        Player player = Manager.input?.singleplayerInputModule?.rewiredPlayer;
+        if (player == null)
+        {
+            return null;
+        }
+
+        Controller activeController = player.controllers.GetLastActiveController();
+        List<ActionElementMap> maps = new();
+        player.controllers.maps.GetElementMapsWithAction((int)action, skipDisabledMaps: true, maps);
+        ActionElementMap binding = null;
+        foreach (ActionElementMap map in maps)
+        {
+            if (map.controllerMap.controllerType != ControllerType.Joystick)
+            {
+                continue;
+            }
+
+            binding ??= map;
+            if (map.controllerMap.controller == activeController)
+            {
+                binding = map;
+                break;
+            }
+        }
+
+        return binding == null ? null : Manager.ui.controllerButtonToCharTable.GetControllerButtonCharacter(
+            ControllerType.Joystick, binding.controllerMap.controller.name, binding.elementIdentifierName);
     }
 
     private static UIelement GetFirstAvailable(params UIelement[] elements)

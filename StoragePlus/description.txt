@@ -1,0 +1,35 @@
+StoragePlus is a mod that overhauls item storage, allowing you to create a network of chests to dump your items into, and access them in a unified interface.
+
+Features
+Connect lots of chests together to create a unified storage network.
+The Storage Terminal allows you to withdraw and deposit items, and also provides the network contents to nearby crafting tables
+Connectors can be used to drain chests and to collect dropped items
+Item droppers allow you to use items from the network in automation
+Unlimited range, run pipes as far as you need to reach far away farms!
+Items
+
+Connectors - Place them below a chest or container to add these into the network. Input connectors will drain items from the chests placed above them, or collect dropped items. Storage connectors will use the chest to store items in the network.
+
+Storage Terminal - Provides access to items in the network, also makes the network contents available to nearby crafting stations. Also a quick stash point so you can dump your items easily into the network.
+
+Storage Pipe - Used to build the network, use it to connect terminals and connectors to build your storage network.
+
+Item Dropper - Requests items from the network and drops them on the ground, allowing other automation structures to interact with the network!
+
+Crafting
+
+All items can be crafted in the "Root Workbench" from CoreLib, you can hand-craft it from your inventory.
+
+Roadmap
+- Add informational stats, like network capacity, network usage %, number of chests, number of items, etc.
+- Move items to their own crafting workbench before we fill the CoreLib one.
+- Add long-range transport solutions to the mod, to prevent having to run long cables towards boulders in outer biomes
+- Interface and UX tweaks, it's rough around the edges now, but functional.
+- If there is interest from other modders, splitting the project into a Lib that can be imported to allow other mods to extend and interact with the network in an ergonomic way.
+- Localize the mod
+
+Suggestions are welcome, let me know what you'd like to see, if it fits the mod I will consider it
+
+Some icons were borrowed from moorowl's ItemBrowser, and the UI was heavily inspired by it. Thank you!
+
+Terminal & Pipe art done by @Bitwise, Thank you!

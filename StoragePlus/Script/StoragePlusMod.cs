@@ -1,17 +1,15 @@
 using CoreLib;
-using CoreLib.Submodule.Command;
 using CoreLib.Submodule.Entity;
 using CoreLib.Submodule.TileSet;
 using CoreLib.Submodule.UserInterface;
 using CoreLib.Util.Extension;
-using PugTilemap;
 using PugMod;
 using UnityEngine;
 using Logger = CoreLib.Util.Logger;
 
 public class StoragePlusMod : IMod
 {
-    public const string VERSION = "1.0.0";
+    public const string VERSION = "1.0.0-ck1.3-local";
     public const string MOD_ID = "StoragePlus";
 
     internal static Logger Log = new("Storage Plus");
@@ -35,8 +33,11 @@ public class StoragePlusMod : IMod
 
         ModInfo = modInfo;
         ModDirectory = API.ModLoader.GetDirectory(modInfo.ModId);
+        StorageTilesetPatch.Initialize(modInfo.Assets);
+        API.ModLoader.ApplyHarmonyPatch(modInfo.ModId, typeof(StorageTilesetPatch));
         ModPlaceableObjectConversionPatch.Reset();
         API.ModLoader.ApplyHarmonyPatch(modInfo.ModId, typeof(ModPlaceableObjectConversionPatch));
+        API.ModLoader.ApplyHarmonyPatch(modInfo.ModId, typeof(StoragePipeMaterialPatch));
         //modInfo.TryLoadBurstAssembly();
 
         Log.LogInfo("Mod loaded successfully");
@@ -48,33 +49,11 @@ public class StoragePlusMod : IMod
 
     public void Shutdown()
     {
+        StorageTilesetPatch.Reset();
     }
 
     public void ModObjectLoaded(Object obj)
     {
-        if (obj is ModTileset tileset)
-        {
-            const TileType targetTileType = TileType.circuitPlate;
-
-            bool isolated = TilesetLayerIsolationUtility.TryCreateOwnTilesetAdaptiveLayers(tileset, targetTileType, MOD_ID);
-            if (!isolated)
-            {
-                Log.LogWarning($"Did not find a '{targetTileType}' layer to isolate for tileset '{tileset.tilesetId}'.");
-            }
-
-            tileset.overrideMaterials ??= new();
-            tileset.overrideParticles ??= new();
-
-            // int adaptiveFallbackLayerCount = TilesetAdaptiveTextureUtility.EnsureFallbackTexturesForTileType(tileset, targetTileType);
-            // if (adaptiveFallbackLayerCount > 0)
-            // {
-            //     Log.LogInfo($"Configured fallback textures for {adaptiveFallbackLayerCount} adaptive '{targetTileType}' layer(s) in '{tileset.tilesetId}'.");
-            // }
-            
-            TileSetModule.AddCustomTileset(tileset);
-            return;
-        }
-        
         if (obj is not GameObject go) return;
 
         UserInterfaceModule.RegisterModUI(go);

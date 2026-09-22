@@ -21,6 +21,7 @@ public sealed class StorageTerminalShowFiltersButton : ButtonUIElement, IStorage
     protected override void Awake()
     {
         StorageTerminalUIUtility.EnsureUiElementLists(this);
+        AssignSerializedReferences();
         base.Awake();
         HideLabel();
     }
@@ -41,7 +42,14 @@ public sealed class StorageTerminalShowFiltersButton : ButtonUIElement, IStorage
             Manager.ui.currentSelectedUIElement != null &&
             Manager.ui.currentSelectedUIElement.transform.IsChildOf(filtersPanel.transform))
         {
-            Manager.ui.DeselectAnySelectedUIElement();
+            if (StorageTerminalUIUtility.IsUsingController())
+            {
+                StorageTerminalUIUtility.SelectForController(this);
+            }
+            else
+            {
+                Manager.ui.DeselectAnySelectedUIElement();
+            }
         }
 
         owner?.OnFiltersPanelVisibilityChanged();
@@ -64,7 +72,7 @@ public sealed class StorageTerminalShowFiltersButton : ButtonUIElement, IStorage
         }
 
         List<TextAndFormatFields> lines = new();
-        owner.AppendInteractionHints(lines, owner.CreateInteractionHintLine("Toggle filters", "UIInteract"));
+        owner.AppendInteractionHints(lines, owner.CreateInteractionHintLine("Toggle filters", PlayerInput.InputType.UI_INTERACT));
         return lines.Count > 0 ? lines : null;
     }
 

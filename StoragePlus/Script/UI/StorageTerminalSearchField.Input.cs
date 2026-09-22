@@ -127,8 +127,11 @@ public sealed partial class StorageTerminalSearchField
 
     public void Deactivate(bool commit)
     {
-        Manager.input.SetActiveInputField(null);
-        Manager.input.EnableInput();
+        if (Manager.input != null && ReferenceEquals(Manager.input.activeInputField, this))
+        {
+            Manager.input.SetActiveInputField(null);
+            Manager.input.EnableInput();
+        }
 
         if (characterMarkBlinker != null)
         {
@@ -211,6 +214,11 @@ public sealed partial class StorageTerminalSearchField
         RenderInputText();
         UpdateHintText();
         MarkTextChanged();
+    }
+
+    public int GetMarkerPosition()
+    {
+        return _currentCharIndex;
     }
 
     public string GetHintString()

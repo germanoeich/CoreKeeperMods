@@ -1,3 +1,4 @@
+using Pug.UnityExtensions;
 using System.Collections.Generic;
 using PugMod;
 using UnityEngine;
@@ -95,6 +96,12 @@ public sealed class StorageTerminalItemSlot : SlotUIBase, IStorageTerminalHotSyn
 
         if (highlightBorder != null)
         {
+            // The imported slot-guide animator overwrites the static rarity border.
+            if (highlightBorder.TryGetComponent(out Animator borderAnimator))
+            {
+                borderAnimator.enabled = false;
+            }
+
             _authoredHighlightBorderColor = highlightBorder.color;
             _authoredHighlightBorderSprite = highlightBorder.sprite;
         }
@@ -225,8 +232,14 @@ public sealed class StorageTerminalItemSlot : SlotUIBase, IStorageTerminalHotSyn
 
     public override void OnSelected()
     {
-        uiScrollWindow?.MoveScrollToIncludePosition(localScrollPosition, background.size.y * 0.5f);
         OnSelectSlot();
+    }
+
+    public override UIelement GetAdjacentUIElement(Direction.Id dir, Vector3 currentPosition)
+    {
+        return slotsUIContainer is StorageTerminalGrid grid
+            ? grid.GetAdjacentEntry(DataIndex, dir, currentPosition)
+            : null;
     }
 
     public override void OnDeselected(bool playEffect = true)
@@ -312,9 +325,9 @@ public sealed class StorageTerminalItemSlot : SlotUIBase, IStorageTerminalHotSyn
         StorageTerminalUI owner = (slotsUIContainer as StorageTerminalGrid)?.Owner;
         owner?.AppendInteractionHints(
             lines,
-            owner.CreateInteractionHintLine("Fetch 1", "UIInteract"),
-            owner.CreateInteractionHintLine("Fetch stack", "UISecondInteract"),
-            owner.CreateInteractionHintLine("Fetch 10", "HotbarSwapModifier", "UIInteract"));
+            owner.CreateInteractionHintLine("Fetch 1", PlayerInput.InputType.UI_INTERACT),
+            owner.CreateSecondaryInteractionHintLine("Fetch stack"),
+            owner.CreateFetchTenInteractionHintLine());
 
         return lines;
     }
@@ -373,6 +386,12 @@ public sealed class StorageTerminalItemSlot : SlotUIBase, IStorageTerminalHotSyn
 
         if (highlightBorder != null)
         {
+            // The imported slot-guide animator overwrites the static rarity border.
+            if (highlightBorder.TryGetComponent(out Animator borderAnimator))
+            {
+                borderAnimator.enabled = false;
+            }
+
             _authoredHighlightBorderColor = highlightBorder.color;
             _authoredHighlightBorderSprite = highlightBorder.sprite;
         }

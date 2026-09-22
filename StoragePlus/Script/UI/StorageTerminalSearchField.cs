@@ -98,6 +98,12 @@ public sealed partial class StorageTerminalSearchField : UIelement, InputManager
         }
     }
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        Deactivate(commit: false);
+    }
+
     public override void OnSelected()
     {
         base.OnSelected();

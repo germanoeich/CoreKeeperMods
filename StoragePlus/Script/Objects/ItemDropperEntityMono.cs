@@ -21,7 +21,7 @@ public class ItemDropperEntityMono : StorageConnectorEntityMono, IFilteringBuild
             return;
         }
 
-        Manager.ui?.HideAllInventoryAndCraftingUI();
+        Manager.ui?.TryHideAllInventoryAndCraftingUI();
         player.SetActiveFilterStructure(null);
     }
 

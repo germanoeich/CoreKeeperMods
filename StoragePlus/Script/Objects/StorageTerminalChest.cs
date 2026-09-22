@@ -26,7 +26,7 @@ public class StorageTerminalChest : Chest
     {
         if (Manager.ui != null)
         {
-            Manager.ui.HideAllInventoryAndCraftingUI();
+            Manager.ui.TryHideAllInventoryAndCraftingUI();
         }
 
         UserInterfaceModule.OpenModUI(this, StorageTerminalUI.InterfaceId);
@@ -36,7 +36,7 @@ public class StorageTerminalChest : Chest
     {
         if (Manager.ui != null && UserInterfaceModule.GetInteractionEntity() == base.entity)
         {
-            Manager.ui.HideAllInventoryAndCraftingUI();
+            Manager.ui.TryHideAllInventoryAndCraftingUI();
         }
 
         base.OnFree();

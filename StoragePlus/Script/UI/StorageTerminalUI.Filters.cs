@@ -82,6 +82,8 @@ public sealed partial class StorageTerminalUI
     {
         StorageTerminalUIUtility.ConfigureNavigationLinks(this, searchField, sortButton, sortOrderButton, showFiltersButton, hintTextButton, grid);
         RefreshFilterNavigation();
+        LinkNetworkFullnessBar();
+        LinkPlayerInventory();
     }
 
     private void RefreshFilterNavigation()
@@ -92,8 +94,11 @@ public sealed partial class StorageTerminalUI
         {
             UIelement bottomTarget = filtersVisible
                 ? buttons[0]
-                : (hintTextButton != null ? hintTextButton : grid);
+                : grid;
             StorageTerminalUIUtility.ReplaceUiElementList(showFiltersButton.bottomUIElements, bottomTarget);
+            StorageTerminalUIUtility.ReplaceUiElementList(showFiltersButton.leftUIElements, searchField);
+            StorageTerminalUIUtility.ReplaceUiElementList(showFiltersButton.rightUIElements, filtersVisible ? buttons[0] : null);
+            StorageTerminalUIUtility.ReplaceUiElementList(showFiltersButton.topUIElements, searchField);
         }
 
         if (buttons == null || buttons.Count == 0 || filterGrid == null)
