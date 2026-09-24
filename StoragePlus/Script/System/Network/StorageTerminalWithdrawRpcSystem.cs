@@ -67,7 +67,6 @@ public partial class StorageTerminalWithdrawRpcSystem : PugSimulationSystemBase
                 continue;
             }
 
-            InventoryBuffer playerMainInventory = playerInventories[0];
             DynamicBuffer<ContainedObjectsBuffer> playerContents = containedLookup[playerEntity];
             bool hasPlayerSlotRequirements = inventorySlotRequirementLookup.TryGetBuffer(playerEntity, out DynamicBuffer<InventorySlotRequirementBuffer> playerSlotRequirements);
             ContainedObjectsBuffer[] simulatedPlayerContents = new ContainedObjectsBuffer[playerContents.Length];
@@ -97,7 +96,6 @@ public partial class StorageTerminalWithdrawRpcSystem : PugSimulationSystemBase
                     takeAll,
                     resolvedInventories,
                     playerInventories,
-                    playerMainInventory,
                     simulatedPlayerContents,
                     hasPlayerSlotRequirements,
                     playerSlotRequirements,
@@ -129,7 +127,6 @@ public partial class StorageTerminalWithdrawRpcSystem : PugSimulationSystemBase
                     ref remaining,
                     takeAll,
                     playerInventories,
-                    playerMainInventory,
                     simulatedPlayerContents,
                     hasPlayerSlotRequirements,
                     playerSlotRequirements,

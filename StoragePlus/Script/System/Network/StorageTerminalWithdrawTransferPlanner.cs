@@ -15,7 +15,6 @@ internal static class StorageTerminalWithdrawTransferPlanner
         ref int remaining,
         bool takeAll,
         DynamicBuffer<InventoryBuffer> playerInventories,
-        InventoryBuffer playerMainInventory,
         ContainedObjectsBuffer[] simulatedPlayerContents,
         bool hasPlayerSlotRequirements,
         DynamicBuffer<InventorySlotRequirementBuffer> playerSlotRequirements,
@@ -31,7 +30,6 @@ internal static class StorageTerminalWithdrawTransferPlanner
             if (!TryFindDestinationSlot(
                     objectInSlot.objectData,
                     playerInventories,
-                    playerMainInventory,
                     simulatedPlayerContents,
                     hasPlayerSlotRequirements,
                     playerSlotRequirements,
@@ -79,10 +77,16 @@ internal static class StorageTerminalWithdrawTransferPlanner
         }
     }
 
+    /// <summary>
+    /// Picks a destination slot across every player inventory buffer: the main inventory
+    /// (index 0) and the four pouch inventories (indices 1-4, sized by the equipped pouch).
+    /// Mirrors the priority of <see cref="InventoryUtility.TryFindSlotToAddTo"/> for a
+    /// chest-to-player transfer: a partial stack anywhere wins, then an empty slot whose
+    /// slot requirement the object fulfils (a matching pouch), then any other empty slot.
+    /// </summary>
     private static bool TryFindDestinationSlot(
         ObjectDataCD objectData,
         DynamicBuffer<InventoryBuffer> playerInventories,
-        InventoryBuffer playerMainInventory,
         ContainedObjectsBuffer[] simulatedPlayerContents,
         bool hasPlayerSlotRequirements,
         DynamicBuffer<InventorySlotRequirementBuffer> playerSlotRequirements,
@@ -101,48 +105,65 @@ internal static class StorageTerminalWithdrawTransferPlanner
             : default;
         bool isStackable = PugDatabase.GetEntityObjectInfo(objectData.objectID, databaseBank.databaseBankBlob).isStackable;
 
-        int emptySlot = -1;
-        int startIndex = playerMainInventory.startIndex;
-        int endIndex = playerMainInventory.startIndex + playerMainInventory.size;
-        for (int slot = startIndex; slot < endIndex; slot++)
+        int firstEmptySlot = -1;
+        int firstRequirementFulfillingEmptySlot = -1;
+        for (int inventoryIndex = 0; inventoryIndex < playerInventories.Length; inventoryIndex++)
         {
-            if (slot >= simulatedPlayerContents.Length)
+            InventoryBuffer inventory = playerInventories[inventoryIndex];
+            if (inventory.cantAddObjectsToInventory)
             {
                 continue;
             }
 
-            if (hasPlayerSlotRequirements &&
-                !InventoryUtility.ObjectIsValidToPutInInventory(
-                    playerSlotRequirements,
-                    objectTagCD,
-                    objectData.objectID,
-                    playerInventories,
-                    overrideLegendaryLookup,
-                    out _,
-                    databaseBank,
-                    slot))
+            int startIndex = inventory.startIndex;
+            int endIndex = math.min(startIndex + inventory.size, simulatedPlayerContents.Length);
+            for (int slot = startIndex; slot < endIndex; slot++)
             {
-                continue;
-            }
+                int indexFulfillingRequirements = -1;
+                if (hasPlayerSlotRequirements &&
+                    !InventoryUtility.ObjectIsValidToPutInInventory(
+                        playerSlotRequirements,
+                        objectTagCD,
+                        objectData.objectID,
+                        playerInventories,
+                        overrideLegendaryLookup,
+                        out indexFulfillingRequirements,
+                        databaseBank,
+                        slot))
+                {
+                    continue;
+                }
 
-            bool canStackInSlot = isStackable && !InventoryUtility.CheckIfCanOnlyContainOneItemPerSlot(playerInventories, slot);
-            ContainedObjectsBuffer destinationObject = simulatedPlayerContents[slot];
-            if (canStackInSlot &&
-                destinationObject.objectID == objectData.objectID &&
-                destinationObject.variation == objectData.variation &&
-                destinationObject.amount < MaxStackAmount)
-            {
-                destinationSlot = slot;
-                capacity = MaxStackAmount - destinationObject.amount;
-                return capacity > 0;
-            }
+                ContainedObjectsBuffer destinationObject = simulatedPlayerContents[slot];
+                bool canStackInSlot = isStackable && !inventory.canOnlyContainOneItemPerSlot;
+                if (canStackInSlot &&
+                    destinationObject.objectID == objectData.objectID &&
+                    destinationObject.variation == objectData.variation &&
+                    destinationObject.amount < MaxStackAmount)
+                {
+                    destinationSlot = slot;
+                    capacity = MaxStackAmount - destinationObject.amount;
+                    return true;
+                }
 
-            if (emptySlot == -1 && destinationObject.objectID == ObjectID.None)
-            {
-                emptySlot = slot;
+                if (destinationObject.objectID != ObjectID.None)
+                {
+                    continue;
+                }
+
+                if (firstRequirementFulfillingEmptySlot == -1 && indexFulfillingRequirements != -1)
+                {
+                    firstRequirementFulfillingEmptySlot = slot;
+                }
+
+                if (firstEmptySlot == -1)
+                {
+                    firstEmptySlot = slot;
+                }
             }
         }
 
+        int emptySlot = firstRequirementFulfillingEmptySlot != -1 ? firstRequirementFulfillingEmptySlot : firstEmptySlot;
         if (emptySlot == -1)
         {
             return false;
