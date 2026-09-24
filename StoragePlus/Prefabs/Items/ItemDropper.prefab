@@ -98,9 +98,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sellValue: -1
   buyValueMultiplier: 1
-  icon: {fileID: -959896352, guid: e5ec622333f5cc1e796a83a39f2fb150, type: 3}
+  icon: {fileID: 174820207, guid: a9e1a4af78daf6a6f9855ed6aff37d7e, type: 3}
   iconOffset: {x: 0, y: 0}
-  smallIcon: {fileID: 1276725434, guid: 12a1b8e4888f23a83b363ac7776ce864, type: 3}
+  smallIcon: {fileID: 1587385328, guid: a9e1a4af78daf6a6f9855ed6aff37d7e, type: 3}
   isStackable: 1
   requiredObjectsToCraft:
   - objectName: ScarletBar

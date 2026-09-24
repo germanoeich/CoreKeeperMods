@@ -21,9 +21,18 @@ MonoBehaviour:
     m_high: -7002545469154887528
   m_dynamicCollections:
     m_list: []
-  m_defaultPrimaryGradientMap: {fileID: 0}
-  m_defaultSecondaryGradientMap: {fileID: 0}
-  m_defaultTertiaryGradientMap: {fileID: 0}
+  m_defaultPrimaryGradientMap:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_defaultSecondaryGradientMap:
+    m_address:
+      m_low: 0
+      m_high: 0
+  m_defaultTertiaryGradientMap:
+    m_address:
+      m_low: 0
+      m_high: 0
   m_defaultPrimaryGradientMapRef:
     m_address:
       m_low: 0
@@ -38,8 +47,8 @@ MonoBehaviour:
       m_high: 0
   m_editorHideEmissive: 0
   m_staticSpriteData:
-    texture: {fileID: 2800000, guid: 8b5b8444290015ed0bec55d338049653, type: 3}
-    emissiveTexture: {fileID: 2800000, guid: 3e6dd8430751e826f917b31f3ea592e8, type: 3}
+    texture: {fileID: 2800000, guid: 273806cffb66f9968a04bd5403026dc3, type: 3}
+    emissiveTexture: {fileID: 2800000, guid: f6bb2ece3d4e7ac23b1ef7096796d618, type: 3}
     normalTexture: {fileID: 0}
     pivot: {x: 0.5, y: 0.5}
     positionalData: []

@@ -99,15 +99,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sellValue: -1
   buyValueMultiplier: 1
-  icon: {fileID: -1175268481, guid: c289cf6b630309cbcaf22fad7b16b1a6, type: 3}
+  icon: {fileID: 1086448288, guid: a9e1a4af78daf6a6f9855ed6aff37d7e, type: 3}
   iconOffset: {x: 0, y: 0}
-  smallIcon: {fileID: 1029730583, guid: c289cf6b630309cbcaf22fad7b16b1a6, type: 3}
+  smallIcon: {fileID: 792744723, guid: a9e1a4af78daf6a6f9855ed6aff37d7e, type: 3}
   isStackable: 1
   requiredObjectsToCraft:
-  - objectName: ScarletBar
-    amount: 100
-  - objectName: OctarineBar
-    amount: 100
+  - objectName: IronBar
+    amount: 20
+  - objectName: GoldBar
+    amount: 10
+  - objectName: AncientGemstone
+    amount: 1
   craftingTime: 4
 --- !u!114 &5393572963265276634
 MonoBehaviour:
