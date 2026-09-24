@@ -63,8 +63,8 @@ MonoBehaviour:
   tertiaryGradientMap: {fileID: 0}
   primaryGradientMapRef:
     m_address:
-      m_low: 6974540477027955987
-      m_high: -7273228661223705479
+      m_low: 0
+      m_high: 0
   secondaryGradientMapRef:
     m_address:
       m_low: 0

@@ -112,6 +112,8 @@ MonoBehaviour:
       guid: 8a1a9a9ea014f84fe9e698670f5178a6
     - path: Scripts/Script/System/Rendering/StorageElectricityTextureSystem.cs
       guid: 7ed107f17c50f49659f83c8ba3a5b309
+    - path: Scripts/Script/System/Rendering/SpriteObjectMaterialSwap.cs
+      guid: b8e0a538df044087a000272482352f11
     - path: Scripts/Script/System/Network/StorageTerminalWithdrawTransferPlanner.cs
       guid: efdf4ceab7ba33b48c7e9b803b617c89
     - path: Scripts/Script/System/Network/StorageTerminalWithdrawRpcSystem.cs
@@ -273,42 +275,6 @@ MonoBehaviour:
     hash: 6468CBF180A39851B7120D198A3593FE930498EFE27E45EECDEC4C8ABB79AD2A:a3860b2bdf4ae6a31e78374da854ea85
   - path: Assets/Mods/StoragePlus/Art/OutputConnector_icon_sm.png
     hash: 108B2CF2A4FA8C487516E5B71B07E33CEF161C365007D08B10D5AB7AD0C56BD9:cc8da8a02e90d0d5534f961bfd520172
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/item_pipe.png
-    hash: 1F1974F684184D3A5FA0F7B46C399D267B6D78F727A3D1C644721D1AC3D3D0DA:31bb77036ccef985199f8a05d19b4aeb
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/item_pipe_emissive.png
-    hash: B833279B5F0C7D5E1275DC126E5457A401B8A41FD10617A3B78A4EB1BB48A7CE:e4d944beb2677cfa757ed0d56bb02dc3
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/network_workbench_down.png
-    hash: 40C6F01824FE147783E91D0C27B0C1039E51C5C0CE8E348709D51E99E5AB9280:4d498c88a8481ff66fe274eb03c0e7b0
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/network_workbench_side.png
-    hash: 36A745031A3EF2E41C785BE91C6FA9173A7388F89F1A57C6D357D52596B3BB3B:dcaecf5cacf21ac7b52642b362ced006
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/network_workbench_side2.png
-    hash: 7859D7E94E46D52CEFED47F84EFF1F4569612BAE51AB13D164DECC3EDB31BBCA:fd0684b3ad3b84351033bb13abd17509
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/network_workbench_up.png
-    hash: 788C7CB6191E30388D03807BA79C4E83D1E25D25E9ACD5096A23CF8567E86A3F:9ba1e8dc89bda9ad13cd3bf08f23e3f3
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_connector.png
-    hash: 52B713D06AC312A13BE35E1DF1A335735CB2EE85D89D4C9F3CE68115C1927B35:f558e04d5dfd939c703588998054f401
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_dropper.png
-    hash: F20F308070C9E4782B050C8BD856499ACE955CB22E0A6B292E2D90B18870783B:dd44688f864edbdb5548f1c52c06e551
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_dropper_emissive.png
-    hash: F6CB9EB89B129DFEA06749999BDB844555E011ADF60D34B0EEE146BD1D0C9648:120df4171a86fe42812f0e45b8bfeaee
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_input_connector_emissive.png
-    hash: 7644B0EBAEF2EB6DAFBAE515965748FA10427AF9A8E44D041F30E266A902CEFD:897e8587a342837151e58c7e596c2b46
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_output_connector_emissive.png
-    hash: 542FF57D48341DEAF6FE85D1E1CCAC5B590CB88F0071927191197C51D2714F4A:1afcfac49471c6bfc86891a547c3edf6
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_plus_lootsprites.png
-    hash: 7AD5B98F13B79034C99101F1B576A69E2E405B41BE1F142E60252FF9C7637612:356dae1bdad9ccfc337b4b065b836e65
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_terminal.png
-    hash: 68564F8602DC230A2578A87AD86C91EDC5371FE7E0AB970A8EF73460A9623B85:75412be4a75a568a5ca00fa0171c9f1b
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_terminal_screen_blink_emissive.png
-    hash: 43BDC5C566AC9097D639C8C7BBDA349AA24B21A5EEB1357090902DC6E4F74C09:74a149bc7759a9ef1d5b32ed957fb99a
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_terminal_screen_blink_side_emissive.png
-    hash: 86A034217568288450E7B55D8F5E973651D5ACC95DAC4B93B42084FBE366B960:0a6d78100c8d45b8e91b7e88ec2723d2
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_terminal_screen_blink_up_emissive.png
-    hash: 6326737D568C8571FD68C34EF1CD81B9C4FAD90976E3748C55ED2881BB6937FA:48abe28357f7b113326e91c6b6020e43
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_terminal_side.png
-    hash: F44F39DCD818DA092828B6652274AA8A66E25BEC56034A59DA6BE61677D23FC5:2f2e0c0494b97a82acab379726c7ebe3
-  - path: Assets/Mods/StoragePlus/Art/storage_plus_assets/storage_plus/storage_terminal_up.png
-    hash: D139C1CFF6255C7AA212E3AE07241F649EDA27AB3F0355255A42E7CD1AFA6755:66af486de79f78e258f768696894a44f
   - path: Assets/Mods/StoragePlus/Art/storage_plus_assets.zip
     hash: D41EF8E04627659306082FAA9AFBC7E81675BDB52B66A18CD10E0FF3495131D3:a7f6d8e8fe7df394c9e8f67d7fc71bfb
   - path: Assets/Mods/StoragePlus/Art/storage_plus_lootsprites.png
@@ -409,6 +375,44 @@ MonoBehaviour:
     hash: A42CB02DDA808CACB45A90A3F2D4AB49D31C1D7B1BADE3B83F037A4892934EC9:3d3c3e6f2ae7b925b882b6050501251b
   - path: Assets/Mods/StoragePlus/Art/v1/terminal-5-animated.aseprite
     hash: 5E56FC94713224342EE5F32C5299D35F5A4162C82FF33978752CB663A0167036:69e5f213ff199efa8b99df81c32c2ad4
+  - path: Assets/Mods/StoragePlus/Art/v2/InputConnector.png
+    hash: 52B713D06AC312A13BE35E1DF1A335735CB2EE85D89D4C9F3CE68115C1927B35:7248c1311a9b9b01f994febd349b08e1
+  - path: Assets/Mods/StoragePlus/Art/v2/InputConnector_emissive.png
+    hash: 7644B0EBAEF2EB6DAFBAE515965748FA10427AF9A8E44D041F30E266A902CEFD:e9cc13033e8581449324c08252e9504d
+  - path: Assets/Mods/StoragePlus/Art/v2/item_pipe.png
+    hash: 1F1974F684184D3A5FA0F7B46C399D267B6D78F727A3D1C644721D1AC3D3D0DA:31bb77036ccef985199f8a05d19b4aeb
+  - path: Assets/Mods/StoragePlus/Art/v2/item_pipe_emissive.png
+    hash: B833279B5F0C7D5E1275DC126E5457A401B8A41FD10617A3B78A4EB1BB48A7CE:e4d944beb2677cfa757ed0d56bb02dc3
+  - path: Assets/Mods/StoragePlus/Art/v2/ItemDropper.png
+    hash: F20F308070C9E4782B050C8BD856499ACE955CB22E0A6B292E2D90B18870783B:96189e5720b16a3eefff56745425e6c9
+  - path: Assets/Mods/StoragePlus/Art/v2/ItemDropper_emissive.png
+    hash: F6CB9EB89B129DFEA06749999BDB844555E011ADF60D34B0EEE146BD1D0C9648:00740a3c4e7b41c73b0831b577abec4c
+  - path: Assets/Mods/StoragePlus/Art/v2/network_workbench_down.png
+    hash: 40C6F01824FE147783E91D0C27B0C1039E51C5C0CE8E348709D51E99E5AB9280:4d498c88a8481ff66fe274eb03c0e7b0
+  - path: Assets/Mods/StoragePlus/Art/v2/network_workbench_side.png
+    hash: 36A745031A3EF2E41C785BE91C6FA9173A7388F89F1A57C6D357D52596B3BB3B:dcaecf5cacf21ac7b52642b362ced006
+  - path: Assets/Mods/StoragePlus/Art/v2/network_workbench_side2.png
+    hash: 7859D7E94E46D52CEFED47F84EFF1F4569612BAE51AB13D164DECC3EDB31BBCA:fd0684b3ad3b84351033bb13abd17509
+  - path: Assets/Mods/StoragePlus/Art/v2/network_workbench_up.png
+    hash: 788C7CB6191E30388D03807BA79C4E83D1E25D25E9ACD5096A23CF8567E86A3F:9ba1e8dc89bda9ad13cd3bf08f23e3f3
+  - path: Assets/Mods/StoragePlus/Art/v2/OutputConnector.png
+    hash: 52B713D06AC312A13BE35E1DF1A335735CB2EE85D89D4C9F3CE68115C1927B35:b643392ca557af9370ae5d65dfc5a4e8
+  - path: Assets/Mods/StoragePlus/Art/v2/OutputConnector_emissive.png
+    hash: 542FF57D48341DEAF6FE85D1E1CCAC5B590CB88F0071927191197C51D2714F4A:21064fd14b07be2eb061a4f4c3a92315
+  - path: Assets/Mods/StoragePlus/Art/v2/storage_plus_lootsprites.png
+    hash: 7AD5B98F13B79034C99101F1B576A69E2E405B41BE1F142E60252FF9C7637612:41b5f01b39d2f04f9bfc7befa82c4568
+  - path: Assets/Mods/StoragePlus/Art/v2/storage_terminal.png
+    hash: 68564F8602DC230A2578A87AD86C91EDC5371FE7E0AB970A8EF73460A9623B85:75412be4a75a568a5ca00fa0171c9f1b
+  - path: Assets/Mods/StoragePlus/Art/v2/storage_terminal_screen_blink_emissive.png
+    hash: 43BDC5C566AC9097D639C8C7BBDA349AA24B21A5EEB1357090902DC6E4F74C09:74a149bc7759a9ef1d5b32ed957fb99a
+  - path: Assets/Mods/StoragePlus/Art/v2/storage_terminal_screen_blink_side_emissive.png
+    hash: 86A034217568288450E7B55D8F5E973651D5ACC95DAC4B93B42084FBE366B960:0a6d78100c8d45b8e91b7e88ec2723d2
+  - path: Assets/Mods/StoragePlus/Art/v2/storage_terminal_screen_blink_up_emissive.png
+    hash: 6326737D568C8571FD68C34EF1CD81B9C4FAD90976E3748C55ED2881BB6937FA:48abe28357f7b113326e91c6b6020e43
+  - path: Assets/Mods/StoragePlus/Art/v2/storage_terminal_side.png
+    hash: F44F39DCD818DA092828B6652274AA8A66E25BEC56034A59DA6BE61677D23FC5:2f2e0c0494b97a82acab379726c7ebe3
+  - path: Assets/Mods/StoragePlus/Art/v2/storage_terminal_up.png
+    hash: D139C1CFF6255C7AA212E3AE07241F649EDA27AB3F0355255A42E7CD1AFA6755:66af486de79f78e258f768696894a44f
   - path: Assets/Mods/StoragePlus/Art/Wide_banner.png
     hash: 875112E9217141EA4508EB0DCDDF5845F0ECEBE7DC11D5DD7D8165D3E55FB4A9:6e0558e48637043712c361f6762cc806
   - path: Assets/Mods/StoragePlus/Data/EntityAuthoringDataBlock/InputConnector.asset
@@ -422,21 +426,21 @@ MonoBehaviour:
   - path: Assets/Mods/StoragePlus/Data/EntityAuthoringDataBlock/StorageTerminal.asset
     hash: 1D08E727140118BC2813258E61FEEA9646FD6B546CDA8643751A6F4E09A7700F:226a40d044a720b94fd10e3f76754021
   - path: Assets/Mods/StoragePlus/Data/GraphicalObjectDataBlock/InputConnectorTile.asset
-    hash: 36FFAA6003142C73BE760AFC1AE7FA2720EEF01C642935C99E9CDA23DF39246A:560d1818f52807b54c3021f36f92039d
+    hash: 33E926021BE5A2AD7132CAD3F5B41A773BA89AC133B1D6F05F037C1D1D34F9CC:51499bc30e4da985c5e61dafaf09ff4f
   - path: Assets/Mods/StoragePlus/Data/GraphicalObjectDataBlock/ItemDropperTile.asset
-    hash: BAB29D9BBC0073401985FA2435C334F5479C1F31F94A9BAFF7935FC46449D857:03a15da7d342bb72bfa7bc0ab62363cc
+    hash: 97194DEB8E38A899896AE5A147E42982F53CF4E0267C14DB4B64887A26ADFD70:ad569fc5eefda89a6bb4df2090dddaf3
   - path: Assets/Mods/StoragePlus/Data/GraphicalObjectDataBlock/OutputConnectorTile.asset
-    hash: 2E48AB5CDB6430A7D2B983B78D08202AB5419826282FFC393BD06154C3DE2126:269da286312244471a5664a18c4b9a9e
+    hash: 8963C495B5D98779E112ECE0F60C002AB2F28C44EBE56322B6DE2860575383D4:0043bc0b25a0c4e72fd6e0a9ae102dd6
   - path: Assets/Mods/StoragePlus/Data/GraphicalObjectDataBlock/StorageTerminalEntity.asset
-    hash: 2041BF8C39FBB218A04D61FC1AEF4819A69FDD2E7C78D529EF50C8EFBA12F66D:7ca7d127d24c00cb815cdcf0312cacc5
+    hash: 830F22C2B4CB0DD17C5C4D36455CDB1CFB6AF94C0E6C1389393CCF6AD6262B5B:d852299877c11d732b23c38fddaa2d3f
   - path: Assets/Mods/StoragePlus/Data/ModTileset.asset
     hash: 81CD5C44EF5B12C19764F99C08D4EFB2AAA79ED59827BE6FD69B11519626505C:a166fa363f0f278f9b78b7dc26928a04
   - path: Assets/Mods/StoragePlus/Data/SpriteAsset/InputConnector.asset
-    hash: E4A1774E4A539B5B876CF5842D3626B447059601D69B58C0C4EE3CB7BC0E5F34:59a5e109127342781867759b2e9e2a2a
+    hash: 7F4DB42DA00FE16F3BFC839ED7C3E583212234C62B3F5F4D04DC3EDEF8BC906C:0b047adfd318123665743b47b2057319
   - path: Assets/Mods/StoragePlus/Data/SpriteAsset/ItemDropper.asset
-    hash: AC2FA090A45448097381AB7B0D15A594FEE3FD2E039EB672C031E64C160A9E5E:ce3fd18b39698b00ee16a205228d5a62
+    hash: DB0E772FCFE3F6C92416394F247FE7001B5E7AFA8932674A1942EF5018935124:b0538b9633c71b24671e29c45304dd47
   - path: Assets/Mods/StoragePlus/Data/SpriteAsset/OutputConnector.asset
-    hash: FA1E38AEC8D4E08E46F666B2897126860BE49F9B0E9093F3D737367AF76A6AC6:820952e5828bfecf7885a29c05b998c5
+    hash: CB2B93B956105194E6FD433DC2F5992002BB94FE38D62402AC28233A50D322F9:f537f4129fc68626de8d88a58c767ffb
   - path: Assets/Mods/StoragePlus/Data/SpriteAsset/StorageTerminal2.asset
     hash: 1418D62E49AF2AC7BA290F029A0049341BC080ABCB22F3F3231C8BAA9FDE394F:75d32c12963722ef2a252bc85208a458
   - path: Assets/Mods/StoragePlus/Data/StorageNetworkTileset.asset
@@ -460,17 +464,17 @@ MonoBehaviour:
   - path: Assets/Mods/StoragePlus/description.txt
     hash: 33DAD897574C0FB68032FBD6B91367E3642B7388ECBEC0FC3518FCBBCE698DA3:820c3a8398896c917cbb29036bc14b09
   - path: Assets/Mods/StoragePlus/Prefabs/Items/InputConnector.prefab
-    hash: 57D210957830C6883CA37E64B4157A6A4D73E2B962949974D6C89D8349E74FF7:8c36412985fb4a15791e2caa35b52556
+    hash: 714CA3B4B0D63009548F5DFF044F9119F713510A09C834CB5236BBCF8CE30995:38e605a07f6e164b50fcde00dbe6f8b8
   - path: Assets/Mods/StoragePlus/Prefabs/Items/ItemDropper.prefab
-    hash: 10A5E4DA8EF9CA705033430A94A77DF3C67EC64AC4DCF417880F9D069446B8AE:904f0d4626b424b39f9944c90ee9b08a
+    hash: 3820E52CC3A6ED8ABADEEF5FE803FFE8DCC6B94140EFE00B71BC7D2938B107CF:551bd51798540b7280b251cc0e37395f
   - path: Assets/Mods/StoragePlus/Prefabs/Items/OutputConnector.prefab
-    hash: 05163DDF65584C9E24735713C9032170E647A191D6A7A19F13387FCD43706335:00947b72eed9914ab60b0d8721cb5363
+    hash: 97EE3D2CC82080E0771F302CB868EB555F1C56F3E7172D77A170C5C950AD992F:30c1ef49ac8e56a2eb85d94b5e65e038
   - path: Assets/Mods/StoragePlus/Prefabs/Items/StoragePipe.prefab
-    hash: EED6BFB0F2A2101D65A6B43501697EF13EBBB3553012D00700CE6E81978AE157:59431f6af81dcc150f0f337532ec0c59
+    hash: 2DB18336003973B2FA9ED9FADBAB7EF15CF4EAA29AD4DDC25E1C77D09268549A:9cee55b74c41bdd9a4ab4253beff56a8
   - path: Assets/Mods/StoragePlus/Prefabs/Items/StorageTerminal.prefab
-    hash: 2B42641A125CFB60C01472E352DC625D2FDDF7EDCFD4EB6A16B47EE64A80EF64:2e078d6882fc52d76f5b98b138ed2972
+    hash: 2697F21967E03C9F32840E107BCAC2144C58E18810ACB2EDD2E6E5847FAB3C46:575db120ed57b77423f00f521e6ab0cb
   - path: Assets/Mods/StoragePlus/Prefabs/Tiles/InputConnectorTile.prefab
-    hash: 8D7F87156DC66B9009625E769CB57CDE7E9D4BB0FBE15F3BFC3166E4E9448BD9:694f38ae0debcd5edeb0eaa9dc917d08
+    hash: 7BD5A66F0B9DB8A309FFED74C4D0A98EB337942B797826E1CE63E02871DF2553:96e9dec24b9344c6080046709dadbb8c
   - path: Assets/Mods/StoragePlus/Prefabs/Tiles/ItemDropperTile.prefab
     hash: 8CB5B78E9119FA789403890D9692649E637922E3D50767B72A6C7D06C6CA55D8:2057928dca4a307d4f29efd5d88a2b5b
   - path: Assets/Mods/StoragePlus/Prefabs/Tiles/OutputConnectorTile.prefab

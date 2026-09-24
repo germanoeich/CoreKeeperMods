@@ -56,6 +56,7 @@ public class StoragePlusMod : IMod
     {
         if (obj is not GameObject go) return;
 
+        SpriteObjectMaterialSwap.Apply(go);
         UserInterfaceModule.RegisterModUI(go);
     }
 
