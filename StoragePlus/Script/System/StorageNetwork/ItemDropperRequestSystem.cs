@@ -15,6 +15,26 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
     private readonly List<CandidateInventory> _candidateInventories = new();
     private EntityQuery _droppedItemQuery;
 
+    // Fair share: droppers with the same filter on the same network take turns, instead of the
+    // first one in query order taking every item. Keyed by dropper entity index.
+    private readonly Dictionary<int, int> _dropCountByDropper = new();
+    private readonly Dictionary<int, long> _lastGroupKeyByDropper = new();
+    private readonly Dictionary<long, HashSet<int>> _droppersByGroup = new();
+
+    // A peer that has not reached the gate for this long (output jammed, e.g. its machine is full;
+    // filter cleared; cut off from the network) no longer holds the rest of its group back. A normal
+    // drop cycle (pickup wait + pickup cooldown), even with slow or manual pickup, stays well under this.
+    private const double InactivePeerSeconds = 10.0;
+    private readonly Dictionary<int, double> _lastGateTimeByDropper = new();
+
+    // A removed dropper would otherwise stay in its group with a frozen count; once every live peer
+    // passed that count the whole group would stop dropping. Swept at most once per frame.
+    private EntityQuery _dropperStateQuery;
+    private int _lastStalePruneFrame = -1;
+    private readonly HashSet<int> _liveDropperIndices = new();
+    private readonly List<int> _deadDropperScratch = new();
+    private readonly List<long> _deadGroupScratch = new();
+
     private struct CandidateInventory
     {
         public Entity Inventory;
@@ -64,6 +84,13 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
             ComponentType.ReadOnly<ContainedObjectsBuffer>(),
             ComponentType.ReadOnly<LocalTransform>(),
             ComponentType.ReadOnly<PickUpItemCD>());
+        // Same shape as the dropper query in OnUpdate; only used to prune stale per-dropper state.
+        _dropperStateQuery = GetEntityQuery(
+            ComponentType.ReadOnly<ObjectFilteringCD>(),
+            ComponentType.ReadOnly<ItemDropperTimingCD>(),
+            ComponentType.ReadOnly<LocalTransform>(),
+            ComponentType.ReadOnly<StorageConnectorTag>(),
+            ComponentType.ReadOnly<OutputConnectorTag>());
         base.OnCreate();
     }
 
@@ -142,8 +169,14 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
                     continue;
                 }
 
+                long groupKey = ComputeGroupKey(network, filtering);
+                if (!PassesFairShareGate(entity.Index, groupKey, elapsedTime))
+                {
+                    continue;
+                }
+
                 BuildCandidateInventories(network, dropperPosition, localTransformLookup);
-                TryQueueDropRequest(
+                bool dropped = TryQueueDropRequest(
                     filtering,
                     databaseBank,
                     inventoryLookup,
@@ -153,6 +186,10 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
                     petLookup,
                     inventoryChanges,
                     GetDropPosition(dropperPosition));
+                if (dropped)
+                {
+                    NotifyDropSucceeded(entity.Index);
+                }
             }
         }
         finally
@@ -221,6 +258,7 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
         DynamicBuffer<InventoryChangeBuffer> inventoryChanges,
         float3 dropPosition)
     {
+        HashSet<long> reservedSourceSlots = StorageNetworkWorldCacheRegistry.GetOrCreate(World).ReservedSourceSlotsThisTick;
         for (int inventoryIndex = 0; inventoryIndex < _candidateInventories.Count; inventoryIndex++)
         {
             Entity sourceInventory = _candidateInventories[inventoryIndex].Inventory;
@@ -238,6 +276,12 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
 
                 for (int slot = inventory.startIndex; slot < endIndex && slot < containedObjects.Length; slot++)
                 {
+                    long slotKey = ((long)sourceInventory.Index << 32) | (uint)slot;
+                    if (reservedSourceSlots.Contains(slotKey))
+                    {
+                        continue;
+                    }
+
                     ContainedObjectsBuffer objectInSlot = containedObjects[slot];
                     if (objectInSlot.objectID != filtering.filterObject ||
                         objectInSlot.variation != filtering.filterVariation ||
@@ -259,6 +303,7 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
                             1,
                             dropPosition)
                     });
+                    reservedSourceSlots.Add(slotKey);
                     return true;
                 }
             }
@@ -271,6 +316,166 @@ public partial class ItemDropperRequestSystem : PugSimulationSystemBase
     {
         return filtering.filterType == FilterType.Whitelist &&
                filtering.filterObject != ObjectID.None;
+    }
+
+    // Groups are per (filter, network). Without the network hash, same-filter droppers in two
+    // unrelated bases would share one counter and the busier base would starve the other.
+    private static long ComputeGroupKey(StorageNetworkSnapshot network, ObjectFilteringCD filtering)
+    {
+        long filterKey = ((long)(int)filtering.filterObject << 32) | (uint)filtering.filterVariation;
+        return filterKey ^ unchecked((long)network.NetworkHash);
+    }
+
+    private bool PassesFairShareGate(int entityIndex, long groupKey, double now)
+    {
+        PruneStaleDropperState();
+
+        // Back from being inactive: its old count is stale, so it re-enters like a newcomer instead
+        // of monopolising the group until it has caught up.
+        bool returning = _lastGateTimeByDropper.TryGetValue(entityIndex, out double lastGate) &&
+                         now - lastGate > InactivePeerSeconds;
+        _lastGateTimeByDropper[entityIndex] = now;
+
+        if (_lastGroupKeyByDropper.TryGetValue(entityIndex, out long oldKey) && oldKey != groupKey)
+        {
+            if (_droppersByGroup.TryGetValue(oldKey, out HashSet<int> oldSet))
+            {
+                oldSet.Remove(entityIndex);
+            }
+        }
+
+        _lastGroupKeyByDropper[entityIndex] = groupKey;
+
+        if (!_droppersByGroup.TryGetValue(groupKey, out HashSet<int> peers))
+        {
+            peers = new HashSet<int>();
+            _droppersByGroup[groupKey] = peers;
+        }
+
+        peers.Add(entityIndex);
+
+        bool known = _dropCountByDropper.TryGetValue(entityIndex, out int myCount);
+        if (!known || returning)
+        {
+            // Start at the highest active peer count so a newcomer (or returnee) doesn't get a burst
+            // of catch-up drops.
+            foreach (int peer in peers)
+            {
+                if (IsActivePeer(peer, entityIndex, now) &&
+                    _dropCountByDropper.TryGetValue(peer, out int peerCount) &&
+                    peerCount > myCount)
+                {
+                    myCount = peerCount;
+                }
+            }
+
+            _dropCountByDropper[entityIndex] = myCount;
+        }
+
+        // Compare against the lowest peer count, not the highest: with a tie, a max comparison lets
+        // every tied dropper through, and the one that keeps losing the same-slot race in
+        // TryQueueDropRequest never advances its count and never drops again. Only active peers
+        // count, so one jammed dropper can't stall the rest of its group.
+        int minOther = int.MaxValue;
+        foreach (int peer in peers)
+        {
+            if (IsActivePeer(peer, entityIndex, now) &&
+                _dropCountByDropper.TryGetValue(peer, out int peerCount) &&
+                peerCount < minOther)
+            {
+                minOther = peerCount;
+            }
+        }
+
+        return myCount <= minOther;
+    }
+
+    private bool IsActivePeer(int peer, int self, double now)
+    {
+        return peer != self &&
+               _lastGateTimeByDropper.TryGetValue(peer, out double lastGate) &&
+               now - lastGate <= InactivePeerSeconds;
+    }
+
+    private void NotifyDropSucceeded(int entityIndex)
+    {
+        if (_dropCountByDropper.TryGetValue(entityIndex, out int count))
+        {
+            _dropCountByDropper[entityIndex] = count + 1;
+        }
+        else
+        {
+            _dropCountByDropper[entityIndex] = 1;
+        }
+    }
+
+    private void PruneStaleDropperState()
+    {
+        int frame = UnityEngine.Time.frameCount;
+        if (frame == _lastStalePruneFrame)
+        {
+            return;
+        }
+
+        _lastStalePruneFrame = frame;
+
+        _liveDropperIndices.Clear();
+        using (NativeArray<Entity> droppers = _dropperStateQuery.ToEntityArray(Allocator.Temp))
+        {
+            for (int i = 0; i < droppers.Length; i++)
+            {
+                _liveDropperIndices.Add(droppers[i].Index);
+            }
+        }
+
+        PruneDeadDropperKeys(_dropCountByDropper);
+        PruneDeadDropperKeys(_lastGroupKeyByDropper);
+        PruneDeadDropperKeys(_lastGateTimeByDropper);
+
+        _deadGroupScratch.Clear();
+        foreach (KeyValuePair<long, HashSet<int>> group in _droppersByGroup)
+        {
+            _deadDropperScratch.Clear();
+            foreach (int index in group.Value)
+            {
+                if (!_liveDropperIndices.Contains(index))
+                {
+                    _deadDropperScratch.Add(index);
+                }
+            }
+
+            for (int i = 0; i < _deadDropperScratch.Count; i++)
+            {
+                group.Value.Remove(_deadDropperScratch[i]);
+            }
+
+            if (group.Value.Count == 0)
+            {
+                _deadGroupScratch.Add(group.Key);
+            }
+        }
+
+        for (int i = 0; i < _deadGroupScratch.Count; i++)
+        {
+            _droppersByGroup.Remove(_deadGroupScratch[i]);
+        }
+    }
+
+    private void PruneDeadDropperKeys<T>(Dictionary<int, T> perDropperState)
+    {
+        _deadDropperScratch.Clear();
+        foreach (int index in perDropperState.Keys)
+        {
+            if (!_liveDropperIndices.Contains(index))
+            {
+                _deadDropperScratch.Add(index);
+            }
+        }
+
+        for (int i = 0; i < _deadDropperScratch.Count; i++)
+        {
+            perDropperState.Remove(_deadDropperScratch[i]);
+        }
     }
 
     private static NativeParallelHashSet<DroppedItemKey> BuildDroppedItemLookup(
