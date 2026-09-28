@@ -35,6 +35,7 @@ public partial class StorageIntakeNetworkSystem : PugSimulationSystemBase
         PugDatabase.DatabaseBankCD databaseBank = SystemAPI.GetSingleton<PugDatabase.DatabaseBankCD>();
         StorageNetworkWorldCache cache = StorageNetworkWorldCacheRegistry.GetOrCreate(World);
         cache.EnsureBuilt(databaseBank);
+        cache.ClearTickReservations();
 
         if (cache.TopologyHash != _cachedTopologyHash || cache.IntakeMembershipHash != _cachedMemberHash)
         {
@@ -70,6 +71,7 @@ public partial class StorageIntakeNetworkSystem : PugSimulationSystemBase
 
     private void DrainConnectorOutputs(PugDatabase.DatabaseBankCD databaseBank)
     {
+        StorageNetworkWorldCache cache = StorageNetworkWorldCacheRegistry.GetOrCreate(World);
         Entity inventoryChangeBufferEntity = SystemAPI.GetSingletonEntity<InventoryChangeBuffer>();
         DynamicBuffer<InventoryChangeBuffer> inventoryChangeBuffer = SystemAPI.GetBuffer<InventoryChangeBuffer>(inventoryChangeBufferEntity);
 
@@ -110,6 +112,7 @@ public partial class StorageIntakeNetworkSystem : PugSimulationSystemBase
                         1,
                         destroyExisting: false)
                 });
+                cache.ReservedSourceSlotsThisTick.Add(((long)transfer.SourceInventory.Index << 32) | (uint)transfer.SourceSlot);
             }
         }
     }

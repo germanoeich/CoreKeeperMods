@@ -54,6 +54,12 @@ public sealed partial class StorageNetworkWorldCache
     public readonly Dictionary<Entity, StorageNetworkSnapshot> NetworkByRelay = new();
     public readonly Dictionary<Entity, StorageNetworkSnapshot> CraftNetworkByInventory = new();
 
+    // Source slots that already have an InventoryChangeBuffer entry queued this tick, keyed as
+    // ((long)inventory.Index << 32) | (uint)slot. Intake and the item droppers both queue changes
+    // against network inventories; when two entries target the same slot in one tick, playback only
+    // applies the first and the second is silently dropped. Cleared by Intake at the start of a tick.
+    public readonly HashSet<long> ReservedSourceSlotsThisTick = new();
+
     public ulong TopologyHash { get; private set; }
     public ulong IntakeMembershipHash { get; private set; }
     public ulong CraftMembershipHash { get; private set; }
@@ -115,6 +121,11 @@ public sealed partial class StorageNetworkWorldCache
         Rebuild(database);
         _built = true;
         CaptureTopologyVersions();
+    }
+
+    public void ClearTickReservations()
+    {
+        ReservedSourceSlotsThisTick.Clear();
     }
 
     public bool TryGetNetworkForRelay(Entity relayEntity, out StorageNetworkSnapshot network)
